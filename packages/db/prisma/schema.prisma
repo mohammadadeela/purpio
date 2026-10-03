@@ -1,0 +1,519 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+enum Role { user admin }
+enum WorkspaceType { personal team }
+enum MemberRole { owner editor viewer }
+enum ProjectType { website webapp mobile image video }
+enum ProjectStatus { draft building ready failed archived }
+enum MsgRole { user assistant system }
+enum JobKind { plan code image video deploy email }
+enum JobStatus { queued running done failed cancelled }
+enum MediaKind { image video model3d }
+enum PlanInterval { month year }
+enum SubStatus { active past_due cancelled paused trialing }
+enum LedgerReason { plan_grant topup usage refund bonus referral admin expiry }
+enum HoldStatus { held settled released }
+enum PmProvider { paypal_card paypal_wallet google_pay }
+enum InvoiceStatus { open paid void refunded }
+enum SecretKind { api_key env deploy_token }
+enum DeployProvider { purpio_subdomain hostinger zip github }
+enum DeployStatus { queued building uploading live failed rolled_back }
+
+model User {
+  id             String   @id @default(cuid())
+  firebaseUid    String   @unique
+  email          String   @unique
+  name           String?
+  avatarUrl      String?
+  role           Role     @default(user)
+  locale         String   @default("en")
+  timezone       String   @default("UTC")
+  onboardingDone Boolean  @default(false)
+  emailVerified  Boolean  @default(false)
+  twoFaEnabled   Boolean  @default(false)
+  totpSecretEnc  String?
+  referralCode   String   @unique @default(cuid())
+  referredById   String?
+  defaultModel   String   @default("gpt-5")
+  prefs          Json     @default("{}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  workspaces     Workspace[]
+  memberships    WorkspaceMember[]
+  subscription   Subscription?
+  ledger         CreditLedger[]
+  holds          CreditHold[]
+  paymentMethods PaymentMethod[]
+  invoices       Invoice[]
+  payments       Payment[]
+  secrets        UserSecret[]
+  apiKeys        ApiKey[]
+  notifications  Notification[]
+  sessions       Session[]
+  auditLogs      AuditLog[]       @relation("actor")
+  emailLogs      EmailLog[]
+  referralsMade  Referral[]       @relation("referrer")
+  referralsGot   Referral[]       @relation("referred")
+  messages       ChatMessage[]
+  @@index([email])
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String   @unique
+  userAgent  String?
+  ip         String?
+  lastSeenAt DateTime @default(now())
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  @@index([userId])
+}
+
+model Workspace {
+  id        String        @id @default(cuid())
+  ownerId   String
+  owner     User          @relation(fields: [ownerId], references: [id])
+  name      String
+  slug      String        @unique
+  type      WorkspaceType @default(personal)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  members   WorkspaceMember[]
+  projects  Project[]
+}
+
+model WorkspaceMember {
+  id           String     @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId       String?
+  user         User?      @relation(fields: [userId], references: [id])
+  invitedEmail String?
+  role         MemberRole @default(editor)
+  acceptedAt   DateTime?
+  createdAt    DateTime   @default(now())
+  @@unique([workspaceId, invitedEmail])
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name         String
+  slug         String
+  type         ProjectType
+  status       ProjectStatus @default(draft)
+  prompt       String
+  brief        Json?
+  tokens       Json?
+  styleSeed    String        @default(cuid())
+  coverUrl     String?
+  pinned       Boolean       @default(false)
+  settings     Json          @default("{}")
+  previewUrl   String?
+  lastOpenedAt DateTime      @default(now())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+  versions     ProjectVersion[]
+  files        ProjectFile[]
+  messages     ChatMessage[]
+  jobs         BuildJob[]
+  media        MediaAsset[]
+  deployments  Deployment[]
+  domains      Domain[]
+  secrets      UserSecret[]
+  @@unique([workspaceId, slug])
+  @@index([workspaceId, updatedAt])
+}
+
+model ProjectVersion {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  number      Int
+  message     String
+  snapshotUrl String?
+  thumbUrl    String?
+  createdById String?
+  createdAt   DateTime @default(now())
+  files       ProjectFile[]
+  @@unique([projectId, number])
+}
+
+model ProjectFile {
+  id        String          @id @default(cuid())
+  projectId String
+  project   Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versionId String
+  version   ProjectVersion  @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  path      String
+  content   String?
+  blobUrl   String?
+  language  String?
+  size      Int             @default(0)
+  @@unique([versionId, path])
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  role        MsgRole
+  content     String
+  thinking    String?
+  attachments Json     @default("[]")
+  modelKey    String?
+  creditsUsed Int      @default(0)
+  tokensIn    Int      @default(0)
+  tokensOut   Int      @default(0)
+  durationMs  Int      @default(0)
+  createdAt   DateTime @default(now())
+  jobs        BuildJob[]
+  @@index([projectId, createdAt])
+}
+
+model BuildJob {
+  id           String     @id @default(cuid())
+  projectId    String
+  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  messageId    String?
+  message      ChatMessage? @relation(fields: [messageId], references: [id])
+  kind         JobKind
+  status       JobStatus  @default(queued)
+  progress     Int        @default(0)
+  log          String     @default("")
+  error        String?
+  input        Json       @default("{}")
+  output       Json?
+  creditHoldId String?    @unique
+  creditHold   CreditHold? @relation(fields: [creditHoldId], references: [id])
+  startedAt    DateTime?
+  finishedAt   DateTime?
+  createdAt    DateTime   @default(now())
+  @@index([status, createdAt])
+}
+
+model MediaAsset {
+  id         String    @id @default(cuid())
+  projectId  String
+  project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  kind       MediaKind
+  prompt     String
+  modelKey   String
+  url        String
+  thumbUrl   String?
+  width      Int?
+  height     Int?
+  durationS  Int?
+  seed       String?
+  createdAt  DateTime  @default(now())
+}
+
+model Model {
+  key              String  @id
+  provider         String
+  label            String
+  badge            String?
+  description      String?
+  costPer1kIn      Decimal @default(0) @db.Decimal(10, 6)
+  costPer1kOut     Decimal @default(0) @db.Decimal(10, 6)
+  costPerImage     Decimal @default(0) @db.Decimal(10, 6)
+  costPerVideoS    Decimal @default(0) @db.Decimal(10, 6)
+  markup           Decimal @default(2) @db.Decimal(6, 2)
+  creditsPer1kIn   Decimal @default(0) @db.Decimal(10, 4)
+  creditsPer1kOut  Decimal @default(0) @db.Decimal(10, 4)
+  creditsPerImage  Int     @default(0)
+  creditsPerVideoS Int     @default(0)
+  minPlan          String  @default("free")
+  isDefault        Boolean @default(false)
+  enabled          Boolean @default(true)
+  sort             Int     @default(0)
+}
+
+model Plan {
+  key              String       @id
+  name             String
+  priceCents       Int
+  interval         PlanInterval @default(month)
+  creditsPerPeriod Int
+  maxProjects      Int?
+  maxTeamMembers   Int          @default(1)
+  features         Json         @default("[]")
+  paypalPlanId     String?
+  active           Boolean      @default(true)
+  sort             Int          @default(0)
+  subscriptions    Subscription[]
+}
+
+model Subscription {
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planKey              String
+  plan                 Plan      @relation(fields: [planKey], references: [key])
+  status               SubStatus @default(active)
+  paypalSubscriptionId String?   @unique
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean   @default(false)
+  autoRenew            Boolean   @default(true)
+  pausedUntil          DateTime?
+  retryCount           Int       @default(0)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model CreditLedger {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  delta        Int
+  balanceAfter Int
+  reason       LedgerReason
+  refType      String?
+  refId        String?
+  note         String?
+  expiresAt    DateTime?
+  createdAt    DateTime     @default(now())
+  @@index([userId, createdAt])
+}
+
+model CreditHold {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  status    HoldStatus @default(held)
+  createdAt DateTime   @default(now())
+  settledAt DateTime?
+  job       BuildJob?
+  @@index([userId, status])
+}
+
+model CreditPack {
+  key        String  @id
+  name       String
+  credits    Int
+  priceCents Int
+  bonusPct   Int     @default(0)
+  active     Boolean @default(true)
+  sort       Int     @default(0)
+}
+
+model PaymentMethod {
+  id             String     @id @default(cuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider       PmProvider
+  vaultToken     String
+  brand          String?
+  last4          String?
+  expMonth       Int?
+  expYear        Int?
+  isDefault      Boolean    @default(false)
+  billingAddress Json?
+  createdAt      DateTime   @default(now())
+  deletedAt      DateTime?
+}
+
+model Invoice {
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  number         String        @unique
+  subscriptionId String?
+  amountCents    Int
+  taxCents       Int           @default(0)
+  currency       String        @default("USD")
+  status         InvoiceStatus @default(open)
+  lineItems      Json
+  pdfUrl         String?
+  paypalOrderId  String?
+  paidAt         DateTime?
+  createdAt      DateTime      @default(now())
+  payments       Payment[]
+}
+
+model Payment {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  invoiceId      String?
+  invoice        Invoice? @relation(fields: [invoiceId], references: [id])
+  provider       String
+  providerId     String
+  eventType      String
+  amountCents    Int
+  status         String
+  idempotencyKey String   @unique
+  raw            Json
+  createdAt      DateTime @default(now())
+}
+
+model UserSecret {
+  id         String     @id @default(cuid())
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId  String?
+  project    Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name       String
+  kind       SecretKind
+  ciphertext Bytes
+  iv         Bytes
+  tag        Bytes
+  wrappedKey Bytes
+  last4      String
+  createdAt  DateTime   @default(now())
+  rotatedAt  DateTime?
+  @@unique([userId, projectId, name])
+}
+
+model Deployment {
+  id           String         @id @default(cuid())
+  projectId    String
+  project      Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versionId    String?
+  provider     DeployProvider
+  status       DeployStatus   @default(queued)
+  url          String?
+  customDomain String?
+  sslStatus    String?
+  log          String         @default("")
+  envHash      String?
+  createdById  String?
+  createdAt    DateTime       @default(now())
+  finishedAt   DateTime?
+}
+
+model Domain {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  hostname   String   @unique
+  verified   Boolean  @default(false)
+  dnsRecords Json
+  createdAt  DateTime @default(now())
+}
+
+model IdeaCard {
+  key            String  @id
+  title          String
+  description    String
+  icon           String
+  category       String
+  promptTemplate String
+  creditEstimate Int
+  sort           Int     @default(0)
+  active         Boolean @default(true)
+}
+
+model Template {
+  key        String      @id
+  name       String
+  type       ProjectType
+  coverUrl   String?
+  promptSeed String
+  featured   Boolean     @default(false)
+  sort       Int         @default(0)
+}
+
+model ApiKey {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  prefix     String
+  hashedKey  String    @unique
+  scopes     String[]
+  lastUsedAt DateTime?
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String
+  title     String
+  body      String?
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  @@index([userId, readAt])
+}
+
+model EmailLog {
+  id         String    @id @default(cuid())
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id])
+  template   String
+  to         String
+  subject    String
+  status     String
+  providerId String?
+  openedAt   DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model Referral {
+  id            String   @id @default(cuid())
+  referrerId    String
+  referrer      User     @relation("referrer", fields: [referrerId], references: [id])
+  referredId    String   @unique
+  referred      User     @relation("referred", fields: [referredId], references: [id])
+  status        String   @default("pending")
+  rewardCredits Int      @default(200)
+  rewardedAt    DateTime?
+  createdAt     DateTime @default(now())
+}
+
+model Coupon {
+  code         String    @id
+  pctOff       Int?
+  creditsBonus Int?
+  maxUses      Int?
+  uses         Int       @default(0)
+  expiresAt    DateTime?
+  active       Boolean   @default(true)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("actor", fields: [actorId], references: [id])
+  action     String
+  targetType String
+  targetId   String?
+  diff       Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+  @@index([targetType, targetId])
+}
+
+model FeatureFlag {
+  key          String   @id
+  enabled      Boolean  @default(false)
+  rolloutPct   Int      @default(0)
+  allowUserIds String[]
+}
+
+model PromptVersion {
+  id        String   @id @default(cuid())
+  stage     String
+  version   Int
+  content   String
+  active    Boolean  @default(false)
+  abPct     Int      @default(0)
+  score     Decimal? @db.Decimal(4, 2)
+  createdAt DateTime @default(now())
+  @@unique([stage, version])
+}

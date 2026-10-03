@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Purpio — What will you create?</title>
+<meta name="theme-color" content="#7C3AED">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238B5CF6'/%3E%3Cstop offset='1' stop-color='%234F46E5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='32' y='32' width='448' height='448' rx='118' fill='url(%23g)'/%3E%3Crect x='150' y='128' width='52' height='256' rx='26' fill='%23fff'/%3E%3Cpath d='M176 154 H290 a76 76 0 0 1 0 152 H176' fill='none' stroke='%23fff' stroke-width='52' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M352 318 L404 344 L378 352 L390 382 L372 388 L362 360 L344 376 Z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+:root{
+  --brand:#7C3AED;--brand2:#4F46E5;--brand-soft:#EDE7FB;--brand-ink:#5B21B6;
+  --ink:#14121F;--ink2:#514B66;--ink3:#8B86A0;
+  --canvas:#F7F6FB;--surface:#FFFFFF;--surface2:#F3F1F9;--line:#E7E4F2;--line2:#D7D2E8;
+  --ok:#16A34A;--warn:#D97706;--bad:#DC2626;
+  --r1:8px;--r2:12px;--r3:20px;
+  --shadow:0 1px 2px rgba(20,18,31,.04),0 8px 24px -12px rgba(124,58,237,.18);
+  --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;--serif:'Instrument Serif',Georgia,serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --brand-soft:#2A1F4A;--brand-ink:#C4B5FD;--ink:#F5F3FF;--ink2:#B8B2CC;--ink3:#7E7894;
+  --canvas:#0F0E16;--surface:#15131F;--surface2:#1C1929;--line:#2A2740;--line2:#363251;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(124,58,237,.35);}}
+:root[data-theme="dark"]{
+  --brand-soft:#2A1F4A;--brand-ink:#C4B5FD;--ink:#F5F3FF;--ink2:#B8B2CC;--ink3:#7E7894;
+  --canvas:#0F0E16;--surface:#15131F;--surface2:#1C1929;--line:#2A2740;--line2:#363251;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(124,58,237,.35);}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;height:100%;font-family:var(--sans);color:var(--ink);background:var(--canvas);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:6px}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
+img{max-width:100%}
+.app{display:grid;grid-template-columns:264px 1fr;height:100%;min-height:100vh}
+.app.compact{grid-template-columns:1fr}
+/* sidebar */
+.side{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:18px 14px;gap:14px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 6px;font-weight:700;font-size:22px;letter-spacing:-.04em}
+.brand .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#4F46E5);margin-left:1px;vertical-align:baseline}
+.logo{width:34px;height:34px;flex:none;filter:drop-shadow(0 4px 10px rgba(124,58,237,.35));animation:breathe 4s ease-in-out 1.2s infinite}
+.logo .bowl{stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw .8s cubic-bezier(.65,0,.2,1) .15s forwards}
+.logo .spark{opacity:0;transform-origin:372px 352px;animation:pop .5s ease-out .9s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
+@keyframes breathe{0%,100%{filter:drop-shadow(0 4px 10px rgba(124,58,237,.25))}50%{filter:drop-shadow(0 4px 18px rgba(124,58,237,.6))}}
+.ws{border:1px solid var(--line);border-radius:var(--r2);padding:10px 12px;display:flex;align-items:center;gap:10px;background:var(--surface)}
+.ws .av{width:30px;height:30px;border-radius:9px;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center;font-weight:600}
+.ws b{display:block;font-size:13px}.ws small{color:var(--ink3);font-size:12px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--ink2);font-weight:500}
+.nav a:hover{background:var(--surface2);color:var(--ink)}
+.nav a.on{background:var(--brand-soft);color:var(--brand-ink)}
+.nav a .n{margin-left:auto;font-size:12px;color:var(--ink3)}
+.nav svg{width:18px;height:18px;flex:none}
+.side .spacer{flex:1}
+.credits{border:1px solid var(--line);border-radius:var(--r2);padding:12px;background:var(--surface2)}
+.credits .bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:8px 0}
+.credits .bar i{display:block;height:100%;background:linear-gradient(90deg,#8B5CF6,#4F46E5);border-radius:3px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.credits small{color:var(--ink3)}
+/* top bar */
+.top{height:60px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:blur(12px);display:flex;align-items:center;gap:14px;padding:0 22px;position:sticky;top:0;z-index:20}
+.crumb{color:var(--ink3)}.crumb b{color:var(--ink);font-weight:500}
+.top .grow{flex:1}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 10px;color:var(--ink3);width:260px}
+.search kbd{margin-left:auto;font:11px var(--sans);border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--surface2)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:500;font-size:13px}
+.pill.brand{background:var(--brand-soft);color:var(--brand-ink);border-color:transparent}
+.iconbtn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--ink2);border:1px solid transparent}
+.iconbtn:hover{background:var(--surface2);border-color:var(--line)}
+.iconbtn svg{width:18px;height:18px}
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:transform .12s ease,background .15s,border-color .15s,box-shadow .15s;overflow:hidden;white-space:nowrap}
+.btn:hover{border-color:var(--line2);background:var(--surface2)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:linear-gradient(135deg,#8B5CF6,#4F46E5);color:#fff;border-color:transparent;box-shadow:0 6px 16px -8px rgba(124,58,237,.7)}
+.btn.primary::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s ease}
+.btn.primary:hover::after{transform:translateX(120%)}
+.btn.primary:hover{box-shadow:0 10px 24px -8px rgba(124,58,237,.8)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--ink2)}
+.btn.ghost:hover{background:var(--surface2);color:var(--ink)}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:8px}
+.btn.lg{padding:14px 22px;font-size:15px;border-radius:12px}
+.btn.danger{color:var(--bad)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn svg{width:16px;height:16px}
+/* ripple */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rip .55s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(3);opacity:0}}
+/* layout helpers */
+.page{padding:28px 32px 60px;max-width:1240px;margin:0 auto;width:100%}
+.row{display:flex;align-items:center;gap:12px}.wrap{flex-wrap:wrap}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);padding:18px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.muted{color:var(--ink3)}.sub{color:var(--ink2)}
+.h-sec{font-size:18px;margin-bottom:14px}
+.tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--surface2);color:var(--ink2)}
+.tag.ok{background:#DCFCE7;color:#166534}.tag.warn{background:#FEF3C7;color:#92400E}.tag.bad{background:#FEE2E2;color:#991B1B}.tag.brand{background:var(--brand-soft);color:var(--brand-ink)}
+:root[data-theme="dark"] .tag.ok,:root:not([data-theme="light"]) .tag.ok{background:#14532D33;color:#86EFAC}
+hr.sep{border:0;border-top:1px solid var(--line);margin:18px 0}
+/* forms */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-weight:500;font-size:13px}
+.field .hint{font-size:12px;color:var(--ink3)}
+.input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);transition:border-color .15s,box-shadow .15s}
+.input:focus{outline:0;border-color:var(--brand);box-shadow:0 0 0 3px rgba(124,58,237,.18)}
+.switch{position:relative;width:40px;height:22px;border-radius:11px;background:var(--line2);transition:background .2s;flex:none}
+.switch i{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s cubic-bezier(.2,.8,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch.on{background:var(--brand)}.switch.on i{transform:translateX(18px)}
+.saved{font-size:12px;color:var(--ok);opacity:0;transition:opacity .3s}.saved.show{opacity:1}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th{text-align:left;color:var(--ink3);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.t td{padding:11px 10px;border-bottom:1px solid var(--line)}
+table.t tr:last-child td{border-bottom:0}
+/* toast */
+.toasts{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:100}
+.toast{background:var(--ink);color:var(--canvas);padding:10px 14px;border-radius:10px;font-weight:500;box-shadow:0 10px 30px -10px rgba(0,0,0,.4);animation:tin .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes tin{from{transform:translateY(12px);opacity:0}}
+/* sheet / modal */
+.overlay{position:fixed;inset:0;background:rgba(20,18,31,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:90;padding:16px}
+.overlay.open{display:flex}
+.sheet{background:var(--surface);border-radius:var(--r3);width:min(560px,100%);max-height:90vh;overflow:auto;padding:24px;border:1px solid var(--line);animation:sin .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes sin{from{transform:translateY(16px) scale(.98);opacity:0}}
+/* HOME */
+.hero{text-align:center;padding:40px 0 10px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--brand-ink);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.hero h1{font-size:clamp(40px,6vw,64px);font-weight:500;letter-spacing:-.03em;margin:14px 0 10px;line-height:1.05}
+.hero h1 em{font-family:var(--serif);font-style:italic;font-weight:400;background:linear-gradient(135deg,#8B5CF6,#4F46E5);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:18px;color:var(--ink2);margin:0}
+.composer{position:relative;margin:28px auto 0;max-width:900px;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:16px 18px 12px;transition:border-color .2s,box-shadow .2s}
+.composer:focus-within{border-color:var(--brand);box-shadow:0 0 0 4px rgba(124,58,237,.14),var(--shadow)}
+.composer textarea{width:100%;border:0;background:transparent;resize:none;min-height:84px;font-size:17px;outline:0;line-height:1.5}
+.composer .bar{display:flex;align-items:center;gap:10px;margin-top:6px}
+.composer .send{margin-left:auto;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#4F46E5);color:#fff;display:grid;place-items:center;box-shadow:0 6px 16px -6px rgba(124,58,237,.8);transition:transform .15s}
+.composer .send:hover{transform:translateY(-1px) scale(1.04)}.composer .send:active{transform:scale(.96)}
+.composer .send svg{width:18px;height:18px}
+.types{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.type{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:500;transition:all .15s}
+.type:hover{border-color:var(--line2);transform:translateY(-1px)}
+.type.on{background:var(--brand-soft);color:var(--brand-ink);border-color:transparent}
+.type svg{width:16px;height:16px}
+.ortry{text-align:center;margin-top:12px;font-size:13px;color:var(--ink3)}
+.ortry a{color:var(--ink2);margin:0 6px;border-bottom:1px dotted var(--line2)}
+.ortry a:hover{color:var(--brand-ink)}
+.ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.idea{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;text-align:left;transition:transform .15s,box-shadow .15s,border-color .15s}
+.idea:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--line2)}
+.idea .ic{width:36px;height:36px;border-radius:10px;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center}
+.idea .ic svg{width:18px;height:18px}
+.idea b{font-size:14px}.idea p{margin:0;font-size:12.5px;color:var(--ink3);line-height:1.4}
+.idea .cost{margin-top:auto;font-size:12px;color:var(--brand-ink);font-weight:600}
+.proj{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.proj:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.proj .thumb{height:120px;background:var(--surface2);display:grid;place-items:center;color:var(--ink3)}
+.proj .meta{padding:12px 14px}.proj b{display:block}.proj small{color:var(--ink3)}
+.scene{position:relative;height:150px;margin:10px auto 0;max-width:900px;perspective:900px;pointer-events:none}
+.tile{position:absolute;width:120px;height:80px;border-radius:14px;background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(79,70,229,.08));border:1px solid rgba(124,58,237,.25);backdrop-filter:blur(6px);display:grid;place-items:center;color:var(--brand-ink);font-weight:600;font-size:12px;box-shadow:0 20px 40px -20px rgba(79,70,229,.5);transition:transform .25s ease-out;animation:floaty 6s ease-in-out infinite}
+.tile:nth-child(1){left:8%;top:30px;animation-delay:0s}.tile:nth-child(2){left:30%;top:60px;animation-delay:-1.5s}.tile:nth-child(3){left:54%;top:20px;animation-delay:-3s}.tile:nth-child(4){left:76%;top:55px;animation-delay:-4.5s}
+@keyframes floaty{0%,100%{translate:0 0}50%{translate:0 -10px}}
+/* BUILDER */
+.builder{display:grid;grid-template-columns:400px 1fr;height:calc(100vh - 60px);min-height:0}
+.chat{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--surface)}
+.msgs{flex:1;overflow:auto;padding:18px}
+.msg{margin-bottom:16px}
+.msg.user{display:flex;justify-content:flex-end}
+.msg.user .b{background:var(--brand-soft);color:var(--ink);padding:10px 14px;border-radius:14px 14px 4px 14px;max-width:85%}
+.msg.ai .b{max-width:100%}
+.think{border:1px solid var(--line);border-radius:10px;background:var(--surface2);margin-bottom:10px;overflow:hidden}
+.think summary{cursor:pointer;padding:8px 12px;font-weight:500;color:var(--ink2);list-style:none;display:flex;gap:8px;align-items:center;font-size:13px}
+.think summary::before{content:"";width:14px;height:14px;border-radius:50%;border:2px solid var(--brand);border-top-color:transparent;animation:spin .8s linear infinite;flex:none}
+.think.done summary::before{animation:none;border:0;background:var(--ok);width:8px;height:8px;margin:0 3px}
+.think .body{padding:0 12px 10px;font-size:13px;color:var(--ink2);white-space:pre-wrap;line-height:1.55}
+@keyframes spin{to{transform:rotate(360deg)}}
+.steps{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.step{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink3);opacity:0;transform:translateY(4px);animation:stepin .3s forwards}
+.step .ck{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;flex:none;font-size:10px;color:#fff}
+.step.done{color:var(--ink)}.step.done .ck{background:var(--ok);border-color:var(--ok)}
+.step.run .ck{border-color:var(--brand);border-top-color:transparent;animation:spin .8s linear infinite}
+.step code{font-size:12px;color:var(--ink2)}
+@keyframes stepin{to{opacity:1;transform:none}}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.costline{font-size:12px;color:var(--ink3);margin-top:8px}
+.chatbox{border-top:1px solid var(--line);padding:12px}
+.chatbox .composer{margin:0;padding:12px 14px 10px;border-radius:16px}
+.chatbox textarea{min-height:52px;font-size:14px}
+.modelpick{position:relative}
+.modelpick select{appearance:none;padding:6px 26px 6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:13px;font-weight:500}
+.preview{display:flex;flex-direction:column;min-height:0;background:var(--canvas)}
+.ptabs{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+.ptab{padding:6px 12px;border-radius:8px;font-weight:500;color:var(--ink2);font-size:13px}
+.ptab.on{background:var(--brand-soft);color:var(--brand-ink)}
+.devices{margin-left:auto;display:flex;gap:4px;border:1px solid var(--line);border-radius:8px;padding:2px}
+.devices button{padding:4px 8px;border-radius:6px;font-size:12px;color:var(--ink3)}.devices button.on{background:var(--surface2);color:var(--ink)}
+.frame{flex:1;min-height:0;display:grid;place-items:center;padding:16px;overflow:auto}
+.frame iframe{border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow);transition:width .3s,height .3s}
+.frame .empty{text-align:center;color:var(--ink3);max-width:360px}
+.panel{flex:1;overflow:auto;padding:16px}
+.ftree{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.ftree div{padding:4px 8px;border-radius:6px;cursor:pointer}.ftree div:hover{background:var(--surface2)}.ftree .dir{color:var(--ink3)}
+pre.code{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;font-size:12.5px;line-height:1.5;margin:0}
+.shimmer{background:linear-gradient(90deg,var(--surface2) 25%,var(--line) 50%,var(--surface2) 75%);background-size:200% 100%;animation:sh 1.2s infinite;border-radius:8px}
+@keyframes sh{to{background-position:-200% 0}}
+/* PRICING */
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px;position:relative;transition:transform .15s,box-shadow .15s}
+.plan:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.plan.hot{border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(135deg,#8B5CF6,#4F46E5) border-box}
+.plan .price{font-size:36px;font-weight:600;letter-spacing:-.03em}.plan .price small{font-size:14px;color:var(--ink3);font-weight:400}
+.plan ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink2)}
+.plan ul li::before{content:"✓";color:var(--brand);font-weight:700;margin-right:8px}
+.plan .pop{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#8B5CF6,#4F46E5);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px}
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface)}
+.toggle button{padding:6px 14px;border-radius:999px;font-weight:500;color:var(--ink2)}.toggle button.on{background:var(--ink);color:var(--canvas)}
+/* CHECKOUT */
+.checkout{display:grid;grid-template-columns:1fr 440px;gap:24px;align-items:start}
+.paym{display:flex;flex-direction:column;gap:8px}
+.pm{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;transition:border-color .15s,background .15s}
+.pm:hover{border-color:var(--line2)}.pm.on{border-color:var(--brand);background:var(--brand-soft)}
+.pm .cb{width:18px;height:18px;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center}
+.pm.on .cb{border-color:var(--brand)}.pm.on .cb::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--brand)}
+.cardbrand{font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 7px;border-radius:5px;background:var(--surface2);color:var(--ink2)}
+.gpay{display:flex;align-items:center;justify-content:center;gap:8px;background:#000;color:#fff;border-radius:10px;padding:11px;font-weight:600;width:100%}
+.paypal{display:flex;align-items:center;justify-content:center;gap:6px;background:#FFC439;color:#003087;border-radius:10px;padding:11px;font-weight:700;width:100%}
+.lock{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3)}
+/* SETTINGS */
+.settings{display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:start}
+.smenu{position:sticky;top:80px;display:flex;flex-direction:column;gap:2px}
+.smenu a{padding:8px 10px;border-radius:8px;color:var(--ink2);font-weight:500}.smenu a.on{background:var(--brand-soft);color:var(--brand-ink)}.smenu a:hover:not(.on){background:var(--surface2)}
+.smenu .grp{font-size:11px;color:var(--ink3);font-weight:600;letter-spacing:.06em;padding:12px 10px 4px;text-transform:uppercase}
+.ring{width:120px;height:120px;position:relative}
+.ring svg{transform:rotate(-90deg)}.ring .c{fill:none;stroke-width:10;stroke:var(--line)}.ring .v{fill:none;stroke-width:10;stroke:url(#rg);stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1)}
+.ring .lbl{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1.1}.ring .lbl b{font-size:22px}.ring .lbl small{color:var(--ink3);font-size:11px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:120px}
+.bars i{flex:1;background:var(--brand-soft);border-radius:4px 4px 0 0;position:relative;transition:height .5s}
+.bars i:hover{background:var(--brand)}
+.bars i::after{content:attr(data-v);position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--ink3);opacity:0}.bars i:hover::after{opacity:1}
+.secret{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--surface2);padding:4px 8px;border-radius:6px}
+/* ADMIN */
+.kpi{display:flex;flex-direction:column;gap:4px}.kpi b{font-size:26px;letter-spacing:-.02em}.kpi small{color:var(--ink3)}.kpi .d{font-size:12px;color:var(--ok)}
+/* responsive */
+@media (max-width:1100px){.plans{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:900px){.app{grid-template-columns:1fr}.side{display:none}.builder{grid-template-columns:1fr;height:auto}.chat{height:60vh}.preview{height:70vh}.checkout,.settings{grid-template-columns:1fr}.smenu{position:static;flex-direction:row;flex-wrap:wrap}.smenu .grp{display:none}.search{display:none}.page{padding:20px 16px 60px}.g2,.g3,.g4{grid-template-columns:1fr}.plans{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.logo .bowl{stroke-dashoffset:0}.logo .spark{opacity:1}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs></svg>
+<div class="app" id="app">
+  <aside class="side" id="side">
+    <a class="brand" href="#/">
+      <svg class="logo" viewBox="0 0 512 512"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs><rect x="32" y="32" width="448" height="448" rx="118" fill="url(#lg)"/><rect x="150" y="128" width="52" height="256" rx="26" fill="#fff"/><path class="bowl" d="M176 154 H290 a76 76 0 0 1 0 152 H176" fill="none" stroke="#fff" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path class="spark" d="M352 318 L404 344 L378 352 L390 382 L372 388 L362 360 L344 376 Z" fill="#fff"/></svg>
+      <span>purpio<span class="dot"></span></span>
+    </a>
+    <div class="ws"><div class="av" id="wsAv">M</div><div><b id="wsName">Personal workspace</b><small>Creator workspace</small></div></div>
+    <a class="btn primary" href="#/" id="newProj" style="justify-content:flex-start">+ New project</a>
+    <nav class="nav" id="nav"></nav>
+    <div class="spacer"></div>
+    <div class="credits">
+      <div class="row" style="justify-content:space-between"><b id="cr1">—</b><a href="#/billing" class="pill brand" style="font-size:12px">Buy credits</a></div>
+      <div class="bar"><i id="crBar" style="width:0"></i></div>
+      <small id="cr2">—</small>
+    </div>
+    <div class="nav"><a href="#/help">${ico('help')} Help &amp; shortcuts</a><a href="#/settings">${ico('settings')} Settings</a></div>
+  </aside>
+  <main style="min-width:0">
+    <header class="top">
+      <button class="iconbtn" id="menuBtn" aria-label="Menu" style="display:none">☰</button>
+      <div class="crumb" id="crumb">Workspace <span style="margin:0 6px">›</span> <b>Home</b></div>
+      <div class="grow"></div>
+      <div class="search" id="cmdk"><span>🔍</span> Search anything… <kbd>⌘K</kbd></div>
+      <button class="iconbtn" id="themeBtn" aria-label="Theme">◐</button>
+      <a class="pill" href="#/billing" id="topCredits">—</a>
+      <a class="iconbtn" href="#/settings" aria-label="Account" style="background:var(--brand-soft);color:var(--brand-ink);font-weight:600" id="topAv">M</a>
+    </header>
+    <div id="view"></div>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<div class="overlay" id="overlay"><div class="sheet" id="sheet"></div></div>
+
+<script>
+/* ---------- state (persisted per viewer) ---------- */
+const DEF={user:{name:'Mohammed',email:'you@example.com',company:'',vat:'',theme:'system',autoRenew:true,plan:'pro',twoFA:false,initial:'M'},
+  credits:3180,creditsMax:4500,draft:'',draftType:'website',model:'gpt5',projects:[],invoices:[
+  {n:'PUR-2026-000312',d:'Sep 3, 2026',a:49,s:'paid'},{n:'PUR-2026-000198',d:'Aug 3, 2026',a:49,s:'paid'},{n:'PUR-2026-000071',d:'Jul 3, 2026',a:19,s:'paid'}],
+  cards:[{brand:'VISA',last4:'4242',exp:'09/28',def:true}],secrets:[{name:'Hostinger API token',last4:'7f2a',kind:'deploy'},{name:'OPENAI_API_KEY',last4:'Q9kz',kind:'api'}],
+  usage:[120,80,210,0,340,160,90,410,60,0,220,300,140,190,70,0,260,380,120,90,0,330,210,150,80,240,0,190,260,120],ideas:{}};
+let S;try{S=JSON.parse(localStorage.getItem('purpio')||'null')}catch(e){S=null}
+S=Object.assign({},DEF,S||{});
+const save=()=>{try{localStorage.setItem('purpio',JSON.stringify(S))}catch(e){}};
+const MODELS={gpt5:{label:'GPT-5',mult:1,note:'Best all-round code',pro:false},gpt5m:{label:'GPT-5 mini',mult:.25,note:'Fast and cheap edits',pro:false},sonnet:{label:'Claude Sonnet 4.6',mult:1.6,note:'Premium code quality',pro:true},gemflash:{label:'Gemini 2.5 Flash',mult:.3,note:'Copy, data, summaries',pro:false}};
+const TYPES={website:{l:'Website',base:140},webapp:{l:'Web app',base:320},mobile:{l:'Mobile app',base:360},image:{l:'Image',base:8},video:{l:'Video',base:800}};
+const IDEAS=[['WhatsApp inbox','Floating chat button and a WhatsApp inbox in your admin.',40,'chat'],['SMS login & alerts','Phone sign-in and order or booking texts.',50,'phone'],['AI data entry','Upload a spreadsheet or photos; products and contacts fill themselves.',60,'table'],['AI support chat','Trained on your own pages, hands off to email.',80,'bot'],['Promo video','A 15-second video of your site with captions and music.',1200,'video'],['Screenshot pack','Device-framed shots of every page and the admin.',30,'camera'],['Hero slider manager','Admin page for slides with auto-generated images.',35,'slides'],['Booking calendar','Slots, reminders and Google Calendar sync.',70,'cal'],['Online payments','Stripe or PayPal checkout wired into the project.',90,'card'],['Multi-language','Translate every page, add a switcher, RTL ready.',60,'globe'],['Blog with AI writer','CMS, SEO fields and a draft generator.',60,'pen'],['3D product viewer','Spin products, hotspots, AR on phones.',100,'cube'],['App icon & brand kit','Logo variations, favicons, social banners.',40,'brand'],['Membership & paywall','Plans, gated content and a member area.',90,'lock'],['Pitch deck','10 slides about the project with real screenshots.',80,'deck'],['Dark mode & themes','Toggle plus three saved themes in admin.',20,'moon']];
+function ico(n){const p={home:'M3 11 12 3l9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',folder:'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',grid:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',tpl:'M4 5h16v4H4zM4 11h7v8H4zM13 11h7v8h-7z',tag:'M3 12 12 3h8v8l-9 9z',chart:'M4 19V5M4 19h16M8 15v-4M12 15V8M16 15v-6',card:'M3 6h18v12H3zM3 10h18',settings:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3.9a7 7 0 0 0-1.7-1L14.5 3h-5l-.4 2.5a7 7 0 0 0-1.7 1L5.1 5.6 3.1 9l2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 1.7 1l.4 2.5h5l.4-2.5a7 7 0 0 0 1.7-1l2.3.9 2-3.4-2-1.5c.1-.3.1-.7.1-1z',help:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5M12 17h0',shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',chat:'M4 5h16v11H8l-4 4z',phone:'M7 2h10v20H7zM11 18h2',table:'M3 5h18v14H3zM3 10h18M9 5v14',bot:'M5 8h14v10H5zM9 13h.01M15 13h.01M12 4v4',video:'M3 7h13v10H3zM16 10l5-3v10l-5-3',camera:'M4 8h4l2-2h4l2 2h4v11H4zM12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',slides:'M3 6h18v10H3zM8 20h8',cal:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',globe:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20M12 2c3 3 3 17 0 20M12 2c-3 3-3 17 0 20',pen:'M4 20l4-1L19 8l-3-3L5 16zM14 6l3 3',cube:'M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7',brand:'M12 3l2.5 6 6.5.5-5 4.2 1.6 6.3L12 16.5 6.4 20l1.6-6.3-5-4.2 6.5-.5z',lock:'M6 11h12v10H6zM9 11V7a3 3 0 0 1 6 0v4',deck:'M4 5h16v11H4zM12 16v4M8 20h8',moon:'M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z',users:'M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a6 6 0 0 1 12 0M16 11a3 3 0 1 0 0-6M22 21a5 5 0 0 0-6-5',rocket:'M12 2c4 2 6 8 4 13l-4 3-4-3C6 10 8 4 12 2zM8 17l-3 5M16 17l3 5M12 10h.01'};
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${p[n]||p.grid}"/></svg>`}
+document.querySelectorAll('.side .nav a').forEach(a=>a.innerHTML=a.innerHTML.replace(/\$\{ico\('(\w+)'\)\}/g,(m,n)=>ico(n)));
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);const fmt=n=>n.toLocaleString('en-US');
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),2600)}
+function sheet(html){$('#sheet').innerHTML=html;$('#overlay').classList.add('open')}
+function closeSheet(){$('#overlay').classList.remove('open')}
+$('#overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeSheet()});
+document.addEventListener('click',e=>{const b=e.target.closest('.btn.primary,.composer .send');if(!b)return;const r=document.createElement('span');r.className='ripple';const rc=b.getBoundingClientRect();const s=Math.max(rc.width,rc.height);r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-rc.left-s/2}px;top:${e.clientY-rc.top-s/2}px`;b.appendChild(r);setTimeout(()=>r.remove(),600)});
+function applyTheme(){const t=S.user.theme;if(t==='system')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t)}
+$('#themeBtn').onclick=()=>{const o=['light','dark','system'];S.user.theme=o[(o.indexOf(S.user.theme)+1)%3];applyTheme();save();toast('Theme: '+S.user.theme)};
+function refreshCredits(){const p=Math.round(S.credits/S.creditsMax*100);$('#cr1').textContent=fmt(S.credits)+' credits';$('#crBar').style.width=Math.max(0,p)+'%';$('#cr2').textContent=S.credits<=0?'Out of credits':`${p}% of ${fmt(S.creditsMax)} monthly · renews Oct 6`;$('#topCredits').textContent='◆ '+fmt(S.credits);$('#wsAv').textContent=$('#topAv').textContent=(S.user.name||'M')[0].toUpperCase()}
+function spend(n){if(S.credits-n<0){topup(n);return false}S.credits-=n;save();refreshCredits();return true}
+function topup(need){sheet(`<h2 style="font-size:20px">You need ${fmt(need)} credits for this run</h2><p class="sub">You have ${fmt(S.credits)}. Add a pack and it continues right where it stopped.</p>
+<div class="grid g2" style="margin:16px 0">${[[800,10,''],[2200,25,'+10%'],[4800,50,'+20%'],[10000,100,'+25%']].map(([c,p,b],i)=>`<button class="card flat" style="text-align:left;cursor:pointer;${i===3?'border-color:var(--brand)':''}" onclick="buyPack(${c},${p})"><div class="row" style="justify-content:space-between"><b>${fmt(c)} credits</b>${b?`<span class="tag brand">${b}</span>`:''}</div><div class="muted">$${p} · one tap with VISA ••4242</div></button>`).join('')}</div>
+<div class="row" style="justify-content:space-between"><span class="lock">🔒 Charged to your saved card. No redirect.</span><button class="btn ghost" onclick="closeSheet()">Not now</button></div>`)}
+function buyPack(c,p){S.credits+=c;S.invoices.unshift({n:'PUR-2026-000'+(400+S.invoices.length),d:'Oct 3, 2026',a:p,s:'paid'});save();refreshCredits();closeSheet();toast(`${fmt(c)} credits added · receipt emailed`)}
+/* ---------- router ---------- */
+const NAV=[['#/','home','Home'],['#/projects','folder','My projects'],['#/templates','tpl','Templates'],['#/ideas','tag','Idea cards'],['#/pricing','card','Pricing'],['#/admin','shield','Admin']];
+function renderNav(){const h=location.hash||'#/';$('#nav').innerHTML=NAV.map(([u,i,l])=>`<a href="${u}" class="${(u==='#/'?h==='#/':h.startsWith(u))?'on':''}">${ico(i)} ${l}${l==='My projects'?`<span class="n">${S.projects.length}</span>`:''}</a>`).join('')}
+const ROUTES={};
+function route(){const h=location.hash||'#/';const key=Object.keys(ROUTES).find(k=>h===k||(k!=='#/'&&h.startsWith(k)))||'#/';renderNav();refreshCredits();$('#view').innerHTML=ROUTES[key](h);$('#view').scrollTop=0;window.scrollTo(0,0);try{localStorage.setItem('purpio.route',h)}catch(e){}}
+window.addEventListener('hashchange',route);
+/* ---------- HOME ---------- */
+ROUTES['#/']=()=>{setTimeout(bindHome,0);$('#crumb').innerHTML='Workspace <span style="margin:0 6px">›</span> <b>Home</b>';return `
+<div class="page">
+  <div class="hero">
+    <span class="eyebrow">✦ A space for your next big idea</span>
+    <h1>What will you <em>create?</em></h1>
+    <p>Websites, apps, images, videos. One idea is all it takes.</p>
+    <div class="scene" id="scene"><div class="tile">Website</div><div class="tile">Mobile app</div><div class="tile">Image</div><div class="tile">Video</div></div>
+    <div class="composer"><textarea id="prompt" placeholder="Describe your idea. Let's bring it to life…" autocomplete="off">${S.draft||''}</textarea>
+      <div class="bar"><button class="btn sm ghost">＋ Attach a reference</button><div class="modelpick"><select id="homeModel">${Object.entries(MODELS).map(([k,m])=>`<option value="${k}" ${S.model===k?'selected':''}>${m.label}</option>`).join('')}</select></div><span class="muted" id="estimate"></span><button class="send" id="go" aria-label="Create">▲</button></div></div>
+    <div class="types" id="types">${Object.entries(TYPES).map(([k,t])=>`<button class="type ${S.draftType===k?'on':''}" data-t="${k}">${t.l}</button>`).join('')}</div>
+    <div class="ortry">Or try <a href="#" data-p="A portfolio that feels like me, with a case-study page and a contact form">A portfolio that feels like me ↗</a><a href="#" data-p="A dashboard for my delivery business with orders, drivers map and daily revenue">A dashboard for my business ↗</a><a href="#" data-p="A booking website for my barbershop with WhatsApp confirmations">An app for my next big idea ↗</a></div>
+  </div>
+  <div class="row" style="justify-content:space-between;margin:36px 0 12px"><h2 class="h-sec" style="margin:0">Your workspace</h2><a href="#/projects" class="sub">View all projects ↗</a></div>
+  <div class="grid g4" id="recent">${S.projects.length?S.projects.slice(0,4).map(projCard).join(''):`<div class="card flat" style="grid-column:1/-1;text-align:center;padding:34px"><b>No projects yet</b><p class="muted" style="margin:6px 0 0">Describe something above. Your first build is free.</p></div>`}</div>
+  <div class="row" style="justify-content:space-between;margin:36px 0 12px"><h2 class="h-sec" style="margin:0">Add to any project in one click</h2><a href="#/ideas" class="sub">All idea cards ↗</a></div>
+  <div class="ideas">${IDEAS.slice(0,8).map(ideaCard).join('')}</div>
+</div>`};
+function ideaCard([t,d,c,i]){return `<button class="idea" onclick="useIdea('${t.replace(/'/g,"\\'")}',${c})"><span class="ic">${ico(i)}</span><b>${t}</b><p>${d}</p><span class="cost">~${fmt(c)} credits · add</span></button>`}
+function useIdea(t,c){const last=S.projects[0];if(!last){S.draft=`Add ${t} to a new project`;save();location.hash='#/';toast('Describe the project first, then the card applies to it');return}sheet(`<h2 style="font-size:20px">Add ${t}</h2><p class="sub">This extends <b>${last.name}</b>. Estimated ${fmt(c)} credits; you pay the exact cost after.</p><div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn ghost" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();if(spend(${c})){toast('${t} added to ${last.name}');location.hash='#/p/${last.id}'}">Add · ${fmt(c)} credits</button></div>`)}
+function projCard(p){return `<a class="proj" href="#/p/${p.id}"><div class="thumb" style="background:${p.bg}"><span style="font-weight:600;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.3)">${p.name}</span></div><div class="meta"><b>${p.name}</b><small>${TYPES[p.type].l} · ${p.when}</small></div></a>`}
+function bindHome(){const ta=$('#prompt');const est=()=>{const t=TYPES[S.draftType].base,m=MODELS[S.model].mult;$('#estimate').textContent=ta.value.trim()?`~${fmt(Math.round(t*(S.draftType==='image'||S.draftType==='video'?1:m)))} credits`:''};
+  ta.addEventListener('input',()=>{S.draft=ta.value;save();est()});est();
+  $('#homeModel').onchange=e=>{S.model=e.target.value;save();est()};
+  $('#types').onclick=e=>{const b=e.target.closest('.type');if(!b)return;S.draftType=b.dataset.t;save();$('#types').querySelectorAll('.type').forEach(x=>x.classList.toggle('on',x===b));est()};
+  document.querySelectorAll('.ortry a').forEach(a=>a.onclick=ev=>{ev.preventDefault();ta.value=a.dataset.p;S.draft=ta.value;save();est();ta.focus()});
+  $('#go').onclick=startProject;ta.onkeydown=e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))startProject()};
+  const sc=$('#scene');if(sc)document.addEventListener('mousemove',ev=>{const r=sc.getBoundingClientRect();const dx=(ev.clientX-r.left-r.width/2)/r.width,dy=(ev.clientY-r.top-r.height/2)/r.height;sc.querySelectorAll('.tile').forEach((t,i)=>t.style.transform=`rotateY(${dx*18*(i%2?1:-1)}deg) rotateX(${-dy*14}deg) translateZ(${i*6}px)`)},{passive:true})}
+function startProject(){const p=$('#prompt').value.trim();if(!p){toast('Describe what you want first');$('#prompt').focus();return}
+  const cost=Math.round(TYPES[S.draftType].base*(S.draftType==='image'||S.draftType==='video'?1:MODELS[S.model].mult));if(!spend(cost))return;
+  const id=Date.now().toString(36);const name=p.split(/[,.]/)[0].replace(/^(a|an|the)\s+/i,'').slice(0,40);const hues=[['#7C3AED','#4F46E5'],['#0EA5E9','#6366F1'],['#F43F5E','#8B5CF6'],['#10B981','#0EA5E9']];const h=hues[S.projects.length%4];
+  S.projects.unshift({id,name:name[0].toUpperCase()+name.slice(1),prompt:p,type:S.draftType,model:S.model,when:'just now',bg:`linear-gradient(135deg,${h[0]},${h[1]})`,cost,built:false});S.draft='';save();location.hash='#/p/'+id}
+/* ---------- PROJECTS / TEMPLATES / IDEAS ---------- */
+ROUTES['#/projects']=()=>{$('#crumb').innerHTML='Workspace › <b>My projects</b>';return `<div class="page"><div class="row" style="justify-content:space-between;margin-bottom:16px"><h1 style="font-size:24px">My projects</h1><div class="row"><input class="input" placeholder="Search projects" style="width:220px"><a class="btn primary" href="#/">+ New project</a></div></div>
+<div class="grid g4">${S.projects.length?S.projects.map(projCard).join(''):'<div class="card flat" style="grid-column:1/-1;text-align:center;padding:40px"><b>Nothing here yet</b><p class="muted">Your projects, versions and deployments will live here.</p><a class="btn primary" href="#/">Create your first project</a></div>'}</div></div>`};
+ROUTES['#/templates']=()=>{$('#crumb').innerHTML='Workspace › <b>Templates</b>';const T=[['Restaurant with online orders','website','#F97316,#EF4444'],['SaaS landing + waitlist','website','#8B5CF6,#4F46E5'],['Clinic booking app','webapp','#0EA5E9,#2563EB'],['E-commerce store + admin','webapp','#10B981,#059669'],['Fitness mobile app','mobile','#F43F5E,#BE185D'],['Real-estate listings','website','#6366F1,#0EA5E9'],['Creator portfolio','website','#14121F,#514B66'],['Delivery dashboard','webapp','#D97706,#EA580C']];return `<div class="page"><h1 style="font-size:24px;margin-bottom:6px">Templates</h1><p class="sub" style="margin:0 0 18px">Real starting points with admin areas, legal pages and seeded content. Pick one and keep talking.</p><div class="grid g4">${T.map(([n,t,g])=>`<a class="proj" href="#" onclick="event.preventDefault();S.draft='${n}';S.draftType='${t}';save();location.hash='#/';toast('Template loaded, adjust and press create')"><div class="thumb" style="background:linear-gradient(135deg,${g})"><span style="color:#fff;font-weight:600">${n}</span></div><div class="meta"><b>${n}</b><small>${TYPES[t].l} · Use this</small></div></a>`).join('')}</div></div>`};
+ROUTES['#/ideas']=()=>{$('#crumb').innerHTML='Workspace › <b>Idea cards</b>';return `<div class="page"><h1 style="font-size:24px;margin-bottom:6px">Idea cards</h1><p class="sub" style="margin:0 0 18px">Things your users will love. One click adds the whole feature, with pages, admin and data.</p><div class="ideas">${IDEAS.map(ideaCard).join('')}</div></div>`};
+</script>
+<script>
+/* ---------- BUILDER ---------- */
+let cur=null,ptab='preview',device='desktop';
+ROUTES['#/p/']=h=>{const id=h.split('/')[2];cur=S.projects.find(p=>p.id===id);if(!cur){location.hash='#/projects';return''}
+  $('#crumb').innerHTML=`<a href="#/projects">My projects</a> <span style="margin:0 6px">›</span> <b>${cur.name}</b>`;setTimeout(bindBuilder,0);
+  return `<div class="builder">
+  <section class="chat"><div class="msgs" id="msgs"></div>
+    <div class="chatbox"><div class="composer"><textarea id="chatIn" placeholder="Change anything… e.g. make the hero darker and add a pricing table"></textarea>
+    <div class="bar"><div class="modelpick"><select id="pModel">${Object.entries(MODELS).map(([k,m])=>`<option value="${k}" ${cur.model===k?'selected':''}>${m.label} · ${m.mult}×</option>`).join('')}</select></div><span class="muted" id="pEst">~40 credits</span><button class="send" id="chatGo" aria-label="Send">▲</button></div></div></div>
+  </section>
+  <section class="preview">
+    <div class="ptabs">${['preview','files','versions','media','deploy'].map(t=>`<button class="ptab ${t===ptab?'on':''}" data-t="${t}">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}
+      <div class="devices">${['desktop','tablet','phone'].map(d=>`<button data-d="${d}" class="${d===device?'on':''}">${d[0].toUpperCase()+d.slice(1)}</button>`).join('')}</div>
+      <button class="iconbtn" title="Open in new tab" onclick="openPreview()">↗</button></div>
+    <div id="pbody" class="frame"></div>
+  </section></div>`};
+function bindBuilder(){$('#msgs').innerHTML='';$('#chatGo').onclick=sendChat;$('#chatIn').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat()}};
+  $('#chatIn').addEventListener('input',e=>$('#pEst').textContent=`~${Math.round(40*MODELS[$('#pModel').value].mult)} credits`);
+  $('#pModel').onchange=e=>{cur.model=e.target.value;save();$('#pEst').textContent=`~${Math.round(40*MODELS[cur.model].mult)} credits`};
+  document.querySelectorAll('.ptab').forEach(b=>b.onclick=()=>{ptab=b.dataset.t;document.querySelectorAll('.ptab').forEach(x=>x.classList.toggle('on',x===b));renderPanel()});
+  document.querySelectorAll('.devices button').forEach(b=>b.onclick=()=>{device=b.dataset.d;document.querySelectorAll('.devices button').forEach(x=>x.classList.toggle('on',x===b));renderPanel()});
+  addMsg('user',cur.prompt);
+  if(cur.built){cur.log.forEach(m=>addMsg('ai',m,true));renderPanel()}else runBuild(cur.prompt,cur.cost,true)}
+function addMsg(role,html,instant){const d=document.createElement('div');d.className='msg '+role;d.innerHTML=`<div class="b">${role==='user'?escape(html):html}</div>`;$('#msgs').appendChild(d);$('#msgs').scrollTop=1e9;return d}
+function escape(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function runBuild(prompt,cost,first){cur.log=cur.log||[];const m=addMsg('ai','');const b=m.querySelector('.b');
+  const think=`<details class="think" open><summary>Thinking</summary><div class="body" id="tb"></div></details>`;b.innerHTML=think;const tb=b.querySelector('#tb');
+  const brief=inferBrief(prompt);const lines=first?[`Reading the brief: ${brief.kind} for "${brief.subject}". Audience: ${brief.audience}.`,`Design direction: ${brief.palette.name} palette, ${brief.font} for display. Hero concept: ${brief.hero}.`,`Pages: ${brief.pages.join(', ')}. Plus admin area, legal pages, 404, sitemap, dark mode.`,`Data: ${brief.data}. Forms with autofill and server validation. Seeded demo content that reads like a real business.`,`Checking the quality list: contrast, focus rings, 360 px layout, empty states, meta tags.`]:[`Understanding the change: "${prompt.slice(0,80)}".`,`Only the affected components will be regenerated to keep the cost low.`,`Re-running the review pass and hot-reloading the preview.`];
+  for(const l of lines){for(const ch of (l+'\n')){tb.textContent+=ch;await sleep(6)}$('#msgs').scrollTop=1e9}
+  b.querySelector('.think').classList.add('done');b.querySelector('summary').textContent='Thought for '+(first?'9':'3')+' seconds';b.querySelector('details').open=false;
+  const files=first?['app/layout.tsx','app/page.tsx','app/(marketing)/pricing/page.tsx','app/(marketing)/contact/page.tsx','app/admin/page.tsx','app/admin/slider/page.tsx','components/Hero.tsx','components/Nav.tsx','lib/db/schema.prisma','styles/tokens.css','public/favicon.svg']:['components/Hero.tsx','styles/tokens.css'];
+  const st=document.createElement('div');st.className='steps';b.appendChild(st);
+  for(let i=0;i<files.length;i++){const s=document.createElement('div');s.className='step run';s.style.animationDelay='0s';s.innerHTML=`<span class="ck"></span><span>Writing <code>${files[i]}</code></span>`;st.appendChild(s);$('#msgs').scrollTop=1e9;await sleep(220+Math.random()*260);s.className='step done';s.querySelector('.ck').textContent='✓';if(i===3&&first){cur.built=true;cur.brief=brief;save();renderPanel()}}
+  cur.built=true;cur.brief=cur.brief||brief;cur.files=files;cur.versions=(cur.versions||[]);cur.versions.unshift({n:cur.versions.length+1,msg:first?'Initial build':prompt.slice(0,50),when:'just now'});
+  b.insertAdjacentHTML('beforeend',`<p style="margin:10px 0 0">${first?`Your ${brief.kind.toLowerCase()} is live in the preview. I assumed ${brief.assume}; tell me to change any of it.`:'Done. The preview is updated.'}</p><div class="actions"><button class="btn sm" onclick="setTab('deploy')">${ico('rocket')} Deploy</button><button class="btn sm" onclick="setTab('files')">Source code</button><button class="btn sm" onclick="useIdea('Promo video',1200)">Promo video · 1,200</button><button class="btn sm" onclick="useIdea('Screenshot pack',30)">Screenshots · 30</button></div><div class="costline">Used ${fmt(cost)} credits · ${MODELS[cur.model].label} · v${cur.versions[0].n}</div>`);
+  cur.log.push(b.innerHTML.replace(' open','').replace(/<details class="think"/,'<details class="think done"'));save();renderPanel();$('#msgs').scrollTop=1e9}
+function sendChat(){const t=$('#chatIn').value.trim();if(!t)return;const cost=Math.round(40*MODELS[cur.model].mult);if(!spend(cost))return;$('#chatIn').value='';addMsg('user',t);cur.log.push(`<div class="b" data-u>${escape(t)}</div>`);if(/dark|night/i.test(t))cur.tweak='dark';if(/pricing/i.test(t))cur.tweak='pricing';runBuild(t,cost,false)}
+function setTab(t){ptab=t;document.querySelectorAll('.ptab').forEach(x=>x.classList.toggle('on',x.dataset.t===t));renderPanel()}
+function inferBrief(p){const s=p.toLowerCase();const pal=[{name:'Ink and saffron',bg:'#FAF7F0',ink:'#1B1A17',acc:'#E07A1F',font:'Fraunces'},{name:'Deep sea',bg:'#0B1220',ink:'#EAF2FF',acc:'#38BDF8',font:'Space Grotesk'},{name:'Forest and cream',bg:'#F4F6F1',ink:'#14281D',acc:'#2F855A',font:'Newsreader'},{name:'Plum and rose',bg:'#FFF7FA',ink:'#2A0F1F',acc:'#D6336C',font:'Sora'}];const i=[...p].reduce((a,c)=>a+c.charCodeAt(0),0)%pal.length;const kind=cur.type==='mobile'?'Mobile app':cur.type==='webapp'?'Web app':cur.type==='image'?'Image set':cur.type==='video'?'Video':'Website';
+  const subj=(s.match(/(?:for|of) (?:my |a |an |the )?([a-z\s]{3,30})/)||[,'your business'])[1].trim();return {kind,subject:subj,audience:/shop|store|order|sell/.test(s)?'buyers on mobile':/book|appointment|clinic|barber/.test(s)?'people booking on their phone':'first-time visitors deciding in 8 seconds',palette:pal[i],font:pal[i].font,hero:/video/.test(s)?'full-bleed looping video with a short claim':/portfolio/.test(s)?'one oversized case study with a scroll-driven reveal':'a product moment with a live number and one action',pages:['Home','About','Services','Pricing','Contact','Blog'],data:/order|shop|store/.test(s)?'Products, orders, customers in Postgres':/book/.test(s)?'Bookings, staff, availability in Postgres':'Leads and content in Postgres',assume:'an English-first site with a contact form that emails you and a free-tier database'}}
+function renderPanel(){const pb=$('#pbody');if(!pb)return;pb.className=ptab==='preview'?'frame':'panel';if(!cur.built){pb.className='frame';pb.innerHTML=`<div class="empty"><div class="shimmer" style="height:160px;width:320px;margin:0 auto 14px"></div><b>Building your preview</b><p>Sections appear here as each file lands.</p></div>`;return}
+  if(ptab==='preview'){const w={desktop:'100%',tablet:'768px',phone:'390px'}[device];pb.innerHTML=`<iframe title="Live preview" style="width:${w};height:100%" sandbox="allow-same-origin" srcdoc="${demoSite().replace(/"/g,'&quot;')}"></iframe>`}
+  else if(ptab==='files'){pb.innerHTML=`<div class="grid" style="grid-template-columns:220px 1fr;gap:14px;height:100%"><div class="card flat ftree"><div class="dir">app/</div>${cur.files.filter(f=>f.startsWith('app')).map(f=>`<div style="padding-left:16px">${f.slice(4)}</div>`).join('')}<div class="dir">components/</div>${cur.files.filter(f=>f.startsWith('comp')).map(f=>`<div style="padding-left:16px">${f.slice(11)}</div>`).join('')}<div class="dir">lib/ · styles/ · public/</div></div>
+  <div><div class="row" style="justify-content:space-between;margin-bottom:10px"><b>components/Hero.tsx</b><div class="row"><button class="btn sm" onclick="toast('Zip is downloading')">Download zip</button><button class="btn sm" onclick="toast('Pushed to GitHub')">Push to GitHub</button></div></div><pre class="code">${escape(`export function Hero() {
+  return (
+    <section className="hero" style={{ background: 'var(--bg)' }}>
+      <h1 className="display">${cur.name}</h1>
+      <p className="lede">${cur.brief.hero}.</p>
+      <a className="cta" href="/contact">Get started</a>
+    </section>
+  )
+}`)}</pre></div></div>`}
+  else if(ptab==='versions'){pb.innerHTML=`<div class="card flat"><table class="t"><tr><th>Version</th><th>Change</th><th>When</th><th></th></tr>${cur.versions.map((v,i)=>`<tr><td><b>v${v.n}</b> ${i===0?'<span class="tag ok">current</span>':''}</td><td>${escape(v.msg)}</td><td class="muted">${v.when}</td><td style="text-align:right"><button class="btn sm" onclick="toast('Restored v${v.n}')">Restore</button> <button class="btn sm ghost" onclick="toast('Comparing side by side')">Compare</button></td></tr>`).join('')}</table></div>`}
+  else if(ptab==='media'){pb.innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:12px"><b>Generated with Gemini, matched to your palette</b><button class="btn sm primary" onclick="genImage()">Generate hero image · 8 credits</button></div><div class="grid g3" id="mediaGrid">${(cur.media||[]).map(m=>`<div class="card flat" style="padding:0;overflow:hidden"><div style="height:140px;background:${m}"></div><div style="padding:10px" class="row"><small class="muted">1536×1024</small><button class="btn sm ghost" style="margin-left:auto" onclick="toast('Set as hero')">Use</button></div></div>`).join('')||'<div class="card flat muted" style="grid-column:1/-1;text-align:center;padding:30px">No media yet. Images and videos you generate for this project appear here.</div>'}</div>`}
+  else if(ptab==='deploy'){pb.innerHTML=`<div class="grid g2"><div class="card"><h3>Purpio subdomain</h3><p class="muted">Free, instant, SSL included.</p><div class="row"><input class="input" value="${cur.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}" style="flex:1"><span class="muted">.purpio.app</span></div><button class="btn primary" style="margin-top:12px" onclick="deploy('purpio')">${ico('rocket')} Deploy · 4 credits</button></div>
+  <div class="card"><h3>Your Hostinger</h3><p class="muted">Uses your encrypted token <span class="secret">hst_••••••••7f2a</span> 🔒</p><div class="field"><label>Domain</label><input class="input" placeholder="yourdomain.com" autocomplete="url"></div><div class="field"><label>Project secrets (injected at build, never in files)</label><div class="row"><span class="secret">STRIPE_KEY ••••k9Lp</span><span class="secret">DATABASE_URL ••••/app</span><button class="btn sm ghost">+ Add</button></div></div><button class="btn primary" onclick="deploy('hostinger')">${ico('rocket')} Deploy to Hostinger · 4 credits</button></div></div>
+  <div class="card" style="margin-top:16px"><h3>Deploy log</h3><pre class="code" id="dlog" style="min-height:120px;margin-top:10px">${cur.deployUrl?`✓ Live at ${cur.deployUrl}`:'Nothing deployed yet.'}</pre></div>`}}
+async function deploy(where){if(!spend(4))return;setTab('deploy');const log=$('#dlog');const steps=['Building production bundle…','Optimizing 14 images…','Uploading 83 files…','Setting 2 environment variables from vault…','Issuing SSL certificate…','Running smoke test on 6 pages… all 200'];log.textContent='';for(const s of steps){log.textContent+=s+'\n';await sleep(500)}cur.deployUrl=where==='purpio'?`https://${cur.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.purpio.app`:'https://yourdomain.com';log.textContent+=`✓ Live at ${cur.deployUrl}\n`;save();toast('Deployed · email sent with the link')}
+function genImage(){if(!spend(8))return;cur.media=cur.media||[];const b=cur.brief.palette;cur.media.unshift(`radial-gradient(circle at 30% 30%,${b.acc},${b.bg} 70%)`);save();renderPanel();toast('Image generated · 8 credits')}
+function openPreview(){const w=window.open('about:blank');if(w){w.document.write(demoSite());w.document.close()}}
+function demoSite(){const b=cur.brief,p=b.palette;const dark=cur.tweak==='dark';const bg=dark?'#0F0E16':p.bg,ink=dark?'#F5F3FF':p.ink;const n=cur.name;
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=${p.font.replace(/ /g,'+')}:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><style>
+  :root{--bg:${bg};--ink:${ink};--acc:${p.acc}}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  nav{display:flex;align-items:center;gap:22px;padding:18px 40px;font-size:14px;font-weight:500}nav b{font-family:'${p.font}',serif;font-size:20px;margin-right:auto}nav a{color:inherit;text-decoration:none;opacity:.8}nav .cta{background:var(--acc);color:#fff;padding:8px 14px;border-radius:999px;opacity:1}
+  .hero{padding:70px 40px 50px;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}.hero h1{font-family:'${p.font}',serif;font-weight:600;font-size:clamp(36px,5vw,58px);line-height:1.02;letter-spacing:-.02em;margin:0 0 16px}.hero p{font-size:18px;opacity:.8;max-width:46ch;margin:0 0 24px}
+  .hero .btn{display:inline-block;background:var(--acc);color:#fff;padding:14px 22px;border-radius:12px;text-decoration:none;font-weight:600}.hero .btn2{margin-left:12px;color:var(--ink);text-decoration:none;font-weight:500;opacity:.8}
+  .art{aspect-ratio:4/3;border-radius:24px;background:radial-gradient(circle at 30% 30%,var(--acc),transparent 60%),linear-gradient(135deg,${p.acc}22,${p.acc}66);position:relative;overflow:hidden}.art::after{content:'';position:absolute;inset:auto 24px 24px auto;width:40%;height:46%;border-radius:16px;background:rgba(255,255,255,.75);box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+  .stat{display:flex;gap:40px;padding:0 40px 50px}.stat div b{display:block;font-size:30px;font-family:'${p.font}',serif}.stat small{opacity:.7}
+  section.f{padding:50px 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}section.f div{padding:22px;border-radius:16px;border:1px solid ${ink}1a}section.f h3{margin:0 0 6px;font-size:17px}section.f p{margin:0;opacity:.75;font-size:14px}
+  ${cur.tweak==='pricing'?`.pr{padding:30px 40px 60px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.pr div{padding:24px;border-radius:16px;border:1px solid ${ink}1a}.pr div:nth-child(2){border-color:var(--acc);box-shadow:0 20px 40px -30px var(--acc)}.pr b{font-size:32px;display:block}`:''}
+  footer{padding:30px 40px;font-size:13px;opacity:.7;display:flex;gap:18px;border-top:1px solid ${ink}1a}@media(max-width:700px){.hero,section.f,.pr{grid-template-columns:1fr}nav{padding:16px 20px}.hero{padding:40px 20px}}
+  </style></head><body><nav><b>${n}</b><a>Services</a><a>About</a><a>Blog</a><a>Contact</a><a class="cta">Book now</a></nav>
+  <section class="hero"><div><h1>${n}, done properly.</h1><p>${b.hero[0].toUpperCase()+b.hero.slice(1)}. Built for ${b.audience}.</p><a class="btn" href="#">Get started</a><a class="btn2" href="#">See how it works</a></div><div class="art"></div></section>
+  <div class="stat"><div><b>4.9</b><small>Average rating</small></div><div><b>1,200+</b><small>Happy customers</small></div><div><b>24h</b><small>Response time</small></div></div>
+  <section class="f"><div><h3>Easy to reach</h3><p>WhatsApp and a contact form that lands in your inbox.</p></div><div><h3>Admin included</h3><p>Manage pages, slides and enquiries without a developer.</p></div><div><h3>Fast everywhere</h3><p>Optimized images, dark mode and a 95 Lighthouse score.</p></div></section>
+  ${cur.tweak==='pricing'?`<section class="pr"><div><h3>Starter</h3><b>$29</b><p>For getting going.</p></div><div><h3>Growth</h3><b>$79</b><p>Most popular.</p></div><div><h3>Pro</h3><b>$149</b><p>Everything, plus priority.</p></div></section>`:''}
+  <footer><span>© 2026 ${n}</span><span>Privacy</span><span>Terms</span><span>Cookies</span></footer></body></html>`}
+/* ---------- PRICING ---------- */
+let yearly=false;
+ROUTES['#/pricing']=()=>{$('#crumb').innerHTML='Workspace › <b>Pricing</b>';const P=[['free','Free',0,'150 one-time','2 projects','Purpio subdomain','Watermark on media'],['starter','Starter',19,'1,500 / month','10 projects','Source download','No watermark'],['pro','Pro',49,'4,500 / month','Unlimited projects','Hostinger deploy + custom domain','Claude Sonnet, priority queue','3 team seats'],['studio','Studio',129,'14,000 / month','Unlimited projects','Video up to 60 s','API access, white-label','10 team seats, dedicated support']];
+  return `<div class="page"><div style="text-align:center"><h1 style="font-size:34px;letter-spacing:-.02em">Plans that pay for themselves</h1><p class="sub" style="font-size:16px">Credits turn into websites, apps, images and videos. Pro is about 30 full websites a month.</p><div class="toggle"><button class="${!yearly?'on':''}" onclick="yearly=false;route()">Monthly</button><button class="${yearly?'on':''}" onclick="yearly=true;route()">Yearly · 2 months free</button></div></div>
+  <div class="plans">${P.map(([k,n,pr,...f])=>`<div class="plan ${k==='pro'?'hot':''}">${k==='pro'?'<span class="pop">Most popular</span>':''}<b>${n}</b><div class="price">$${yearly?Math.round(pr*10/12):pr}<small>/month${yearly&&pr?' billed yearly':''}</small></div><div class="muted">${f[0]} credits</div><ul>${f.slice(1).map(x=>`<li>${x}</li>`).join('')}</ul><a class="btn ${k==='pro'?'primary':''}" style="margin-top:auto" href="${pr?`#/checkout?plan=${k}`:'#/'}">${S.user.plan===k?'Current plan':pr?'Choose '+n:'Start free'}</a></div>`).join('')}</div>
+  <div class="grid g3" style="margin-top:28px"><div class="card flat"><b>What costs what</b><p class="muted" style="margin:6px 0 0">Website 60–150 · Web app with admin 150–400 · Image 8 · 10 s video 800. The exact cost shows before every run.</p></div><div class="card flat"><b>Need more?</b><p class="muted" style="margin:6px 0 0">Credit packs from $10, bigger packs carry up to 25% bonus and never expire on paid plans.</p></div><div class="card flat"><b>Cancel anytime</b><p class="muted" style="margin:6px 0 0">Your projects and source code stay yours forever, on any plan.</p></div></div></div>`};
+/* ---------- CHECKOUT ---------- */
+let pm=0;
+ROUTES['#/checkout']=h=>{$('#crumb').innerHTML='<a href="#/pricing">Pricing</a> <span style="margin:0 6px">›</span> <b>Checkout</b>';const plan=(h.split('plan=')[1]||'pro').split('&')[0];const price={starter:19,pro:49,studio:129}[plan]||49;const cr={starter:1500,pro:4500,studio:14000}[plan];const tax=Math.round(price*0.0*100)/100;
+  return `<div class="page"><div class="checkout"><div>
+  <h1 style="font-size:24px;margin-bottom:16px">Payment</h1>
+  <div class="card"><div class="paym" id="paym">${S.cards.map((c,i)=>`<div class="pm ${pm===i?'on':''}" onclick="pm=${i};route()"><span class="cb"></span><span class="cardbrand">${c.brand}</span><span>•••• ${c.last4}</span><span class="muted">${c.exp}</span>${c.def?'<span class="tag" style="margin-left:auto">Default</span>':''}</div>`).join('')}
+  <div class="pm ${pm===99?'on':''}" onclick="pm=99;route()"><span class="cb"></span>Add a new card</div></div>
+  ${pm===99?`<div style="margin-top:14px"><div class="field"><label>Card number</label><input class="input" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456"></div><div class="grid g3"><div class="field"><label>Name on card</label><input class="input" autocomplete="cc-name"></div><div class="field"><label>Expiry</label><input class="input" autocomplete="cc-exp" placeholder="MM/YY"></div><div class="field"><label>CVC</label><input class="input" autocomplete="cc-csc" inputmode="numeric"></div></div><label class="row" style="gap:10px;font-size:13px"><span class="switch on" onclick="this.classList.toggle('on')"><i></i></span>Save this card for renewals and one-tap credit top-ups</label></div>`:''}
+  <hr class="sep"><div class="grid g2"><button class="gpay" onclick="pay('${plan}',${cr},${price})">G Pay</button><button class="paypal" onclick="pay('${plan}',${cr},${price})">PayPal</button></div>
+  <p class="lock" style="margin:12px 0 0">🔒 Card details are handled by PayPal's secure fields inside this page. Purpio never sees your card number.</p></div>
+  <div class="card" style="margin-top:16px"><h3 style="font-size:15px;margin-bottom:10px">Billing address</h3><div class="grid g2"><div class="field"><label>Full name</label><input class="input" autocomplete="name" value="${S.user.name}"></div><div class="field"><label>Company (optional)</label><input class="input" autocomplete="organization"></div><div class="field" style="grid-column:1/-1"><label>Street address</label><input class="input" autocomplete="street-address"></div><div class="field"><label>City</label><input class="input" autocomplete="address-level2"></div><div class="field"><label>Country</label><input class="input" autocomplete="country-name"></div></div></div></div>
+  <div class="card" style="position:sticky;top:80px"><h3 style="font-size:15px">Order summary</h3><div class="row" style="justify-content:space-between;margin-top:12px"><span>${plan[0].toUpperCase()+plan.slice(1)} plan, monthly</span><b>$${price}.00</b></div><div class="row" style="justify-content:space-between;margin-top:6px" class="muted"><span class="muted">${fmt(cr)} credits every month</span></div><div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted">Tax</span><span class="muted">$${tax.toFixed(2)}</span></div><div class="field" style="margin-top:12px"><div class="row"><input class="input" placeholder="Coupon code" style="flex:1"><button class="btn sm" onclick="toast('LAUNCH30 applied: 30% off first month')">Apply</button></div></div><hr class="sep"><div class="row" style="justify-content:space-between"><b>Due today</b><b style="font-size:20px">$${price}.00</b></div><p class="muted" style="font-size:12px">Renews Nov 3, 2026 at $${price}. Auto-renew is on; turn it off any time in Billing.</p><button class="btn primary lg" style="width:100%" onclick="pay('${plan}',${cr},${price})">Pay $${price}.00 now</button></div></div></div>`};
+function pay(plan,cr,price){const b=$('.btn.primary.lg');if(b){b.disabled=true;b.textContent='Confirming with your bank…'}setTimeout(()=>{S.user.plan=plan;S.creditsMax=cr;S.credits+=cr;S.invoices.unshift({n:'PUR-2026-000'+(400+S.invoices.length),d:'Oct 3, 2026',a:price,s:'paid'});save();refreshCredits();sheet(`<div style="text-align:center;padding:10px"><div style="font-size:48px">✓</div><h2 style="font-size:22px">You're on ${plan[0].toUpperCase()+plan.slice(1)}</h2><p class="sub"><b id="cu">0</b> credits landed. Receipt PUR-2026-000${399+S.invoices.length} is in your inbox.</p><a class="btn primary lg" href="#/" onclick="closeSheet()">Start building</a></div>`);let n=0;const t=setInterval(()=>{n+=Math.ceil(cr/30);if(n>=cr){n=cr;clearInterval(t)}const e=$('#cu');if(e)e.textContent=fmt(n)},30)},1400)}
+/* ---------- SETTINGS ---------- */
+const SM=[['General',[['profile','Profile'],['appearance','Appearance'],['models','Models & defaults'],['notifications','Notifications']]],['Plan',[['usage','Usage'],['billing','Billing'],['invoices','Invoices'],['referrals','Referrals']]],['Developer',[['connections','Connections'],['secrets','Secrets'],['api','API keys'],['team','Team']]],['Account',[['security','Security']]]];
+ROUTES['#/settings']=h=>{const sec=h.split('/')[2]||'profile';$('#crumb').innerHTML=`<a href="#/settings">Settings</a> <span style="margin:0 6px">›</span> <b>${SM.flatMap(g=>g[1]).find(x=>x[0]===sec)?.[1]||''}</b>`;return `<div class="page"><div class="settings"><nav class="smenu">${SM.map(([g,items])=>`<span class="grp">${g}</span>${items.map(([k,l])=>`<a href="#/settings/${k}" class="${k===sec?'on':''}">${l}</a>`).join('')}`).join('')}</nav><div>${SECT[sec]?SECT[sec]():''}</div></div></div>`};
+ROUTES['#/billing']=()=>{location.hash='#/settings/billing';return''};ROUTES['#/help']=()=>{$('#crumb').innerHTML='<b>Help</b>';return `<div class="page"><h1 style="font-size:24px">Help & shortcuts</h1><div class="grid g2" style="margin-top:16px"><div class="card"><b>Shortcuts</b><table class="t" style="margin-top:8px"><tr><td>Create / send</td><td><kbd>⌘</kbd> <kbd>Enter</kbd></td></tr><tr><td>Search anything</td><td><kbd>⌘</kbd> <kbd>K</kbd></td></tr><tr><td>Toggle preview device</td><td><kbd>⌘</kbd> <kbd>D</kbd></td></tr><tr><td>Deploy</td><td><kbd>⌘</kbd> <kbd>Shift</kbd> <kbd>D</kbd></td></tr></table></div><div class="card"><b>Contact support</b><p class="muted">Your current project is attached automatically so we can see what you see.</p><div class="field"><textarea class="input" rows="4" placeholder="What happened?"></textarea></div><button class="btn primary" onclick="toast('Sent · we reply within a day')">Send message</button></div></div></div>`};
+const savedTag=()=>`<span class="saved">Saved</span>`;
+function autosave(el){S.user[el.name]=el.type==='checkbox'?el.checked:el.value;save();refreshCredits();const s=el.closest('.card').querySelector('.saved');if(s){s.classList.add('show');setTimeout(()=>s.classList.remove('show'),1500)}}
+const SECT={
+profile:()=>`<div class="card"><div class="row" style="justify-content:space-between"><h2 class="h-sec" style="margin:0">Profile</h2>${savedTag()}</div><hr class="sep"><div class="row" style="margin-bottom:16px"><div class="ws" style="border:0;padding:0"><div class="av" style="width:56px;height:56px;font-size:22px">${S.user.name[0]}</div></div><button class="btn sm">Change photo</button></div><div class="grid g2"><div class="field"><label>Name</label><input class="input" name="name" autocomplete="name" value="${S.user.name}" onblur="autosave(this)"></div><div class="field"><label>Email</label><input class="input" name="email" autocomplete="email" value="${S.user.email}" onblur="autosave(this)"><span class="hint">Changing it sends a verification link to the new address.</span></div><div class="field"><label>Language</label><select class="input"><option>English</option><option>العربية</option><option>Español</option><option>Français</option></select></div><div class="field"><label>Timezone</label><select class="input"><option>Asia/Jerusalem (GMT+3)</option><option>Europe/London</option><option>America/New_York</option></select></div></div></div>`,
+appearance:()=>`<div class="card"><h2 class="h-sec">Appearance</h2><hr class="sep"><div class="grid g3">${['light','dark','system'].map(t=>`<button class="card flat" style="cursor:pointer;text-align:left;${S.user.theme===t?'border-color:var(--brand)':''}" onclick="S.user.theme='${t}';applyTheme();save();route()"><div style="height:60px;border-radius:8px;background:${t==='dark'?'#15131F':t==='light'?'#fff':'linear-gradient(90deg,#fff 50%,#15131F 50%)'};border:1px solid var(--line);margin-bottom:8px"></div><b>${t[0].toUpperCase()+t.slice(1)}</b></button>`).join('')}</div><hr class="sep"><label class="row" style="justify-content:space-between"><span><b>Reduce motion</b><br><span class="hint">Turns off the 3D hero and animations.</span></span><span class="switch" onclick="this.classList.toggle('on');toast('Saved')"><i></i></span></label></div>`,
+models:()=>`<div class="card"><h2 class="h-sec">Models & defaults</h2><p class="muted" style="margin:0 0 12px">Each model charges credits at its own rate. The estimate before every run uses the model you pick.</p><table class="t"><tr><th>Model</th><th>Best for</th><th>Credit rate</th><th>Default</th></tr>${Object.entries(MODELS).map(([k,m])=>`<tr><td><b>${m.label}</b> ${m.pro?'<span class="tag brand">Pro</span>':''}</td><td class="muted">${m.note}</td><td>${m.mult}× base</td><td><input type="radio" name="dm" ${S.model===k?'checked':''} onchange="S.model='${k}';save();toast('Default model: ${m.label}')"></td></tr>`).join('')}<tr><td><b>Gemini Image</b></td><td class="muted">All images, matched to your palette</td><td>8 / image</td><td>—</td></tr><tr><td><b>Gemini Video</b></td><td class="muted">Promo and background video</td><td>80 / second</td><td>—</td></tr></table><hr class="sep"><div class="grid g3"><div class="field"><label>Default image size</label><select class="input"><option>1536 × 1024</option><option>1024 × 1024</option><option>1024 × 1536</option></select></div><div class="field"><label>Default video length</label><select class="input"><option>10 s</option><option>15 s</option><option>30 s</option></select></div><div class="field"><label>Auto review pass</label><select class="input"><option>On (recommended)</option><option>Off</option></select></div></div></div>`,
+notifications:()=>`<div class="card"><h2 class="h-sec">Notifications</h2><table class="t"><tr><th>Event</th><th>Email</th><th>In app</th></tr>${['Build finished while away','Deploy finished or failed','Credits at 20% and 0','Receipts and renewals','Team invites and comments','Product updates (monthly)'].map((e,i)=>`<tr><td>${e}</td><td><span class="switch ${i<5?'on':''}" onclick="this.classList.toggle('on')"><i></i></span></td><td><span class="switch on" onclick="this.classList.toggle('on')"><i></i></span></td></tr>`).join('')}</table></div>`,
+usage:()=>{const used=S.usage.reduce((a,b)=>a+b,0);const max=Math.max(...S.usage);const pct=S.credits/S.creditsMax;const C=2*Math.PI*52;return `<div class="grid g2"><div class="card"><h2 class="h-sec">Credits</h2><div class="row" style="gap:22px"><div class="ring"><svg width="120" height="120"><circle class="c" cx="60" cy="60" r="52"/><circle class="v" cx="60" cy="60" r="52" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-Math.max(0,pct))}"/></svg><div class="lbl"><div><b>${fmt(S.credits)}</b><br><small>of ${fmt(S.creditsMax)}</small></div></div></div><div><b>${Math.round(pct*100)}% left</b><p class="muted" style="margin:4px 0 10px">Renews Oct 6 · ${S.user.plan[0].toUpperCase()+S.user.plan.slice(1)} plan</p><button class="btn sm primary" onclick="topup(0)">Buy credits</button></div></div></div>
+<div class="card"><h2 class="h-sec">By model this month</h2><table class="t">${[['GPT-5',2140],['Gemini Image',416],['GPT-5 mini',290],['Gemini Video',800],['Deploys',24]].map(([m,v])=>`<tr><td>${m}</td><td style="text-align:right"><b>${fmt(v)}</b></td></tr>`).join('')}</table></div></div>
+<div class="card" style="margin-top:16px"><div class="row" style="justify-content:space-between"><h2 class="h-sec" style="margin:0">Daily spend, last 30 days</h2><button class="btn sm" onclick="toast('CSV exported')">Export CSV</button></div><div class="bars" style="margin-top:18px">${S.usage.map(v=>`<i style="height:${v/max*100}%" data-v="${v}"></i>`).join('')}</div><div class="row" style="justify-content:space-between;margin-top:6px"><small class="muted">Sep 4</small><small class="muted">Total ${fmt(used)} credits</small><small class="muted">Oct 3</small></div></div>`},
+billing:()=>`<div class="card"><div class="row" style="justify-content:space-between"><div><h2 class="h-sec" style="margin:0">${S.user.plan[0].toUpperCase()+S.user.plan.slice(1)} plan <span class="tag ok">Active</span></h2><p class="muted" style="margin:4px 0 0">${fmt(S.creditsMax)} credits a month · next charge Oct 6, 2026</p></div><div class="row"><a class="btn" href="#/pricing">Change plan</a><button class="btn ghost danger" onclick="sheet('<h2 style=font-size:20px>Cancel at period end?</h2><p class=sub>You keep every project and the source code. Credits stay usable until Oct 6. You can also pause for 1 to 3 months.</p><div class=row style=justify-content:flex-end><button class=\\'btn ghost\\' onclick=closeSheet()>Keep plan</button><button class=btn onclick=\\'closeSheet();toast(\"Paused for 1 month\")\\'>Pause 1 month</button><button class=\\'btn danger\\' onclick=\\'closeSheet();toast(\"Plan ends Oct 6\")\\'>Cancel</button></div>')">Cancel</button></div></div><hr class="sep"><label class="row" style="justify-content:space-between"><span><b>Auto-renew</b><br><span class="hint">Charges your default card on Oct 6. We email you 3 days before.</span></span><span class="switch ${S.user.autoRenew?'on':''}" onclick="this.classList.toggle('on');S.user.autoRenew=this.classList.contains('on');save();toast(S.user.autoRenew?'Auto-renew on':'Auto-renew off')"><i></i></span></label></div>
+<div class="card" style="margin-top:16px"><div class="row" style="justify-content:space-between"><h2 class="h-sec" style="margin:0">Payment methods</h2><a class="btn sm" href="#/checkout?plan=${S.user.plan}" onclick="pm=99">Add card</a></div><div class="paym" style="margin-top:12px">${S.cards.map((c,i)=>`<div class="pm"><span class="cardbrand">${c.brand}</span><span>•••• ${c.last4}</span><span class="muted">${c.exp}</span>${c.def?'<span class="tag">Default</span>':''}<span style="margin-left:auto" class="row"><button class="btn sm ghost">Set default</button><button class="btn sm ghost danger">Remove</button></span></div>`).join('')}<div class="pm"><span class="cardbrand">G Pay</span><span>Google Pay</span><span class="tag ok" style="margin-left:auto">Ready</span></div></div><p class="lock" style="margin:12px 0 0">🔒 Stored as PayPal vault tokens. Card numbers never touch Purpio.</p></div>
+<div class="card" style="margin-top:16px"><h2 class="h-sec">Credit packs</h2><div class="grid g4">${[[800,10,''],[2200,25,'+10%'],[4800,50,'+20%'],[10000,100,'+25%']].map(([c,p,b])=>`<button class="card flat" style="cursor:pointer;text-align:left" onclick="buyPack(${c},${p})"><div class="row" style="justify-content:space-between"><b>${fmt(c)}</b>${b?`<span class="tag brand">${b}</span>`:''}</div><div class="muted">$${p}</div></button>`).join('')}</div></div>
+<div class="card" style="margin-top:16px"><div class="row" style="justify-content:space-between"><h2 class="h-sec" style="margin:0">Invoice details</h2>${savedTag()}</div><div class="grid g2" style="margin-top:12px"><div class="field"><label>Company name</label><input class="input" name="company" autocomplete="organization" value="${S.user.company}" onblur="autosave(this)"></div><div class="field"><label>VAT / Tax ID</label><input class="input" name="vat" value="${S.user.vat}" onblur="autosave(this)"></div></div></div>`,
+invoices:()=>`<div class="card"><h2 class="h-sec">Invoices</h2><table class="t"><tr><th>Number</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr>${S.invoices.map(i=>`<tr><td><b>${i.n}</b></td><td>${i.d}</td><td>$${i.a}.00</td><td><span class="tag ok">Paid</span></td><td style="text-align:right"><button class="btn sm" onclick="toast('PDF downloading')">PDF</button> <button class="btn sm ghost" onclick="toast('Receipt emailed')">Email</button></td></tr>`).join('')}</table></div>`,
+referrals:()=>`<div class="card"><h2 class="h-sec">Referrals</h2><p class="sub">You and your friend both get 200 credits when they buy any plan.</p><div class="row"><input class="input" readonly value="https://purpio.app/r/${S.user.name.toLowerCase()}"><button class="btn primary" onclick="navigator.clipboard&&navigator.clipboard.writeText('https://purpio.app/r/${S.user.name.toLowerCase()}');toast('Link copied')">Copy</button></div><hr class="sep"><div class="grid g3"><div class="kpi"><b>3</b><small>Friends joined</small></div><div class="kpi"><b>600</b><small>Credits earned</small></div><div class="kpi"><b>2</b><small>Pending</small></div></div></div>`,
+connections:()=>`<div class="card"><h2 class="h-sec">Connections</h2>${[['Hostinger','Deploy to your own hosting','hst_••••7f2a',true],['GitHub','Push source code to a repo','',false],['Google Drive','Import brand files and references','',false],['Firebase','Use your own auth and database','',false]].map(([n,d,t,on])=>`<div class="pm" style="cursor:default"><div><b>${n}</b><br><small class="muted">${d}</small></div><span style="margin-left:auto" class="row">${on?`<span class="secret">${t}</span><span class="lock">🔒 Encrypted</span><button class="btn sm ghost">Rotate</button><button class="btn sm ghost danger">Disconnect</button>`:`<button class="btn sm" onclick="toast('${n} connected')">Connect</button>`}</span></div>`).join('')}<p class="lock" style="margin-top:10px">Tokens are encrypted with AES-256-GCM and a key Purpio staff cannot read. They are shown once, then only the last 4 characters.</p></div>`,
+secrets:()=>`<div class="card"><div class="row" style="justify-content:space-between"><div><h2 class="h-sec" style="margin:0">Secrets</h2><p class="muted" style="margin:4px 0 0">Bring your own keys to pay provider cost directly, or store keys your projects need.</p></div><button class="btn sm primary" onclick="sheet('<h2 style=font-size:20px>Add a secret</h2><div class=field><label>Name</label><input class=input placeholder=STRIPE_SECRET_KEY></div><div class=field><label>Value</label><input class=input type=password></div><p class=lock>🔒 Encrypted before it is stored. You will not see it again.</p><div class=row style=justify-content:flex-end><button class=\\'btn ghost\\' onclick=closeSheet()>Cancel</button><button class=\\'btn primary\\' onclick=\\'closeSheet();toast(\"Secret saved\")\\'>Save</button></div>')">Add secret</button></div><table class="t" style="margin-top:12px"><tr><th>Name</th><th>Value</th><th>Kind</th><th></th></tr>${S.secrets.map(s=>`<tr><td><b>${s.name}</b></td><td><span class="secret">••••••••${s.last4}</span></td><td><span class="tag">${s.kind}</span></td><td style="text-align:right"><button class="btn sm ghost">Rotate</button><button class="btn sm ghost danger">Delete</button></td></tr>`).join('')}</table></div>`,
+api:()=>`<div class="card"><h2 class="h-sec">API keys <span class="tag brand">Studio</span></h2><p class="sub">Trigger builds and fetch projects from your own tools.</p><div class="pm" style="cursor:default"><span class="secret">pk_live_••••••••Zq7m</span><span class="muted">Created Sep 12 · last used 2 h ago</span><button class="btn sm ghost danger" style="margin-left:auto">Revoke</button></div><button class="btn sm" style="margin-top:10px" onclick="toast('Key created, copy it now')">Create key</button></div>`,
+team:()=>`<div class="card"><div class="row" style="justify-content:space-between"><h2 class="h-sec" style="margin:0">Team <span class="muted" style="font-weight:400;font-size:13px">1 of 3 seats</span></h2><button class="btn sm primary" onclick="toast('Invite sent')">Invite by email</button></div><table class="t" style="margin-top:12px"><tr><th>Member</th><th>Role</th><th>Joined</th></tr><tr><td><b>${S.user.name}</b> <span class="muted">${S.user.email}</span></td><td>Owner</td><td class="muted">Jul 2026</td></tr></table></div>`,
+security:()=>`<div class="card"><h2 class="h-sec">Security</h2><div class="pm" style="cursor:default"><div><b>Password</b><br><small class="muted">Last changed 3 months ago</small></div><button class="btn sm" style="margin-left:auto" onclick="toast('Reset link emailed')">Change</button></div><div class="pm" style="cursor:default;margin-top:8px"><div><b>Two-factor authentication</b><br><small class="muted">Authenticator app with 10 recovery codes</small></div><span class="switch ${S.user.twoFA?'on':''}" style="margin-left:auto" onclick="this.classList.toggle('on');S.user.twoFA=this.classList.contains('on');save();toast(S.user.twoFA?'2FA on':'2FA off')"><i></i></span></div><h3 style="font-size:14px;margin:18px 0 8px">Sign-in methods</h3><div class="row wrap"><span class="pill">Email ✓</span><span class="pill">Google ✓</span><span class="pill" style="color:var(--ink3)">GitHub · Connect</span></div><h3 style="font-size:14px;margin:18px 0 8px">Active sessions</h3><table class="t"><tr><td>Chrome on Windows <span class="tag ok">This device</span></td><td class="muted">Ramallah · now</td><td></td></tr><tr><td>Safari on iPhone</td><td class="muted">2 days ago</td><td style="text-align:right"><button class="btn sm ghost">Sign out</button></td></tr></table><hr class="sep"><div class="row"><button class="btn sm" onclick="toast('Export ready in a few minutes')">Download my data</button><button class="btn sm ghost danger" onclick="toast('Confirmation email sent')">Delete account</button></div></div>`};
+/* ---------- ADMIN ---------- */
+ROUTES['#/admin']=h=>{$('#crumb').innerHTML='<b>Admin</b>';const sec=h.split('/')[2]||'overview';const M=[['overview','Overview'],['users','Users'],['plans','Plans & packs'],['models','Models'],['prompts','Prompts'],['jobs','Jobs'],['payments','Payments']];
+  const body={overview:()=>`<div class="grid g4"><div class="card kpi"><b>$12,480</b><small>Revenue this month</small><span class="d">▲ 18% vs Sep</span></div><div class="card kpi"><b>$5,910</b><small>Provider cost</small><span class="d">Margin 52.6%</span></div><div class="card kpi"><b>1,284</b><small>Paying users</small><span class="d">▲ 96 this week</span></div><div class="card kpi"><b>3.1%</b><small>Job failure rate</small><span class="d" style="color:var(--warn)">Alert at 5%</span></div></div><div class="card" style="margin-top:16px"><h2 class="h-sec">Credits sold vs spent, 30 days</h2><div class="bars">${S.usage.map((v,i)=>`<i style="height:${(v+120)/560*100}%;background:${i%2?'var(--brand-soft)':'var(--brand)'}" data-v="${v+120}"></i>`).join('')}</div></div>`,
+  users:()=>`<div class="card"><div class="row" style="margin-bottom:10px"><input class="input" placeholder="Search by email or name" style="width:300px"><select class="input" style="width:140px"><option>All plans</option><option>Pro</option><option>Studio</option></select></div><table class="t"><tr><th>User</th><th>Plan</th><th>Credits</th><th>Spent 30d</th><th>Status</th><th></th></tr>${[['sara@studio.co','Studio',9120,4880,'ok'],['omar@dev.io','Pro',310,4190,'ok'],['lina@shop.ps','Starter',0,1500,'warn'],['test@fraud.tk','Free',150,150,'bad']].map(([e,p,c,s,st])=>`<tr><td><b>${e}</b></td><td>${p}</td><td>${fmt(c)}</td><td>${fmt(s)}</td><td><span class="tag ${st}">${st==='ok'?'Active':st==='warn'?'Out of credits':'Flagged'}</span></td><td style="text-align:right"><button class="btn sm ghost" onclick="toast('Granted 200 credits (logged)')">Grant</button><button class="btn sm ghost">Impersonate</button></td></tr>`).join('')}</table></div>`,
+  plans:()=>`<div class="card"><table class="t"><tr><th>Plan</th><th>Price</th><th>Credits</th><th>Margin at full use</th><th>PayPal plan</th></tr>${[['Starter',19,1500],['Pro',49,4500],['Studio',129,14000]].map(([n,p,c])=>`<tr><td><b>${n}</b></td><td><input class="input" value="${p}" style="width:80px"></td><td><input class="input" value="${c}" style="width:100px"></td><td>${Math.round((p-c*0.005)/p*100)}%</td><td class="muted">P-7XK…</td></tr>`).join('')}</table><button class="btn sm primary" style="margin-top:10px" onclick="toast('Plans saved · pricing page updated')">Save</button></div>`,
+  models:()=>`<div class="card"><p class="muted">Change provider cost; credits recompute at 2× everywhere.</p><table class="t"><tr><th>Model</th><th>Provider cost</th><th>Markup</th><th>Credits</th><th>Enabled</th></tr>${[['GPT-5','$1.25 / $10 per 1M','2.0×','0.25 / 2 per 1k'],['GPT-5 mini','$0.25 / $2 per 1M','2.0×','0.05 / 0.4 per 1k'],['Claude Sonnet 4.6','$3 / $15 per 1M','2.0×','0.6 / 3 per 1k'],['Gemini Image','$0.04 / image','2.0×','8 / image'],['Gemini Video','$0.40 / s','2.0×','80 / s']].map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}<td><span class="switch on" onclick="this.classList.toggle('on')"><i></i></span></td></tr>`).join('')}</table></div>`,
+  prompts:()=>`<div class="card"><h2 class="h-sec">Background prompts</h2><table class="t"><tr><th>Stage</th><th>Version</th><th>Quality score</th><th>A/B</th></tr>${[['1 · Intent and brief','v14','4.6 / 5','—'],['2 · Design direction','v22','4.7 / 5','v23 at 20%'],['3 · Build','v31','4.4 / 5','—'],['4 · Review','v9','4.8 / 5','—']].map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table><button class="btn sm" style="margin-top:10px" onclick="toast('Editor opened')">Edit stage</button></div>`,
+  jobs:()=>`<div class="card"><table class="t"><tr><th>Job</th><th>User</th><th>Kind</th><th>Status</th><th>Credits</th></tr>${[['j_8f2','omar@dev.io','code','run',140],['j_8f1','sara@studio.co','video','queued',1200],['j_8ee','lina@shop.ps','image','done',8],['j_8ec','tom@x.com','deploy','failed',4]].map(([i,u,k,s,c])=>`<tr><td class="secret">${i}</td><td>${u}</td><td>${k}</td><td><span class="tag ${s==='done'?'ok':s==='failed'?'bad':'brand'}">${s}</span></td><td>${c}</td></tr>`).join('')}</table></div>`,
+  payments:()=>`<div class="card"><table class="t"><tr><th>Event</th><th>User</th><th>Amount</th><th>Status</th></tr>${[['PAYMENT.CAPTURE.COMPLETED','sara@studio.co','$129.00','ok'],['BILLING.SUBSCRIPTION.RENEWED','omar@dev.io','$49.00','ok'],['PAYMENT.CAPTURE.DENIED','lina@shop.ps','$19.00','bad'],['PAYMENT.CAPTURE.REFUNDED','tom@x.com','−$25.00','warn']].map(([e,u,a,s])=>`<tr><td class="secret">${e}</td><td>${u}</td><td>${a}</td><td><span class="tag ${s}">${s==='ok'?'Settled':s==='bad'?'Retry day 3':'Refunded'}</span></td></tr>`).join('')}</table></div>`}[sec];
+  return `<div class="page"><div class="row wrap" style="margin-bottom:18px">${M.map(([k,l])=>`<a class="ptab ${k===sec?'on':''}" href="#/admin/${k}">${l}</a>`).join('')}</div>${body?body():''}</div>`};
+/* ---------- init ---------- */
+applyTheme();document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();sheet(`<input class="input" placeholder="Jump to a page or project…" autofocus style="font-size:16px"><div style="margin-top:10px">${[...NAV.map(([u,,l])=>[u,l]),['#/settings/usage','Usage'],['#/settings/billing','Billing'],...S.projects.map(p=>['#/p/'+p.id,p.name])].map(([u,l])=>`<a class="pm" href="${u}" onclick="closeSheet()">${l}</a>`).join('')}</div>`);}});
+$('#cmdk').onclick=()=>document.dispatchEvent(new KeyboardEvent('keydown',{key:'k',metaKey:true}));
+if(!location.hash){let r='#/';try{r=localStorage.getItem('purpio.route')||'#/'}catch(e){}location.hash=r}else route();
+if(location.hash)route();
+</script>
+</body></html>

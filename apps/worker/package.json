@@ -1,0 +1,4 @@
+{ "name": "@purpio/worker", "version": "0.1.0", "type": "module",
+  "scripts": { "dev": "tsx watch src/index.ts", "build": "tsc -p tsconfig.json", "start": "node dist/index.js", "typecheck": "tsc --noEmit", "test": "vitest run" },
+  "dependencies": { "@purpio/db": "workspace:*", "@purpio/email": "workspace:*", "@purpio/prompts": "workspace:*", "@purpio/shared": "workspace:*", "@purpio/api": "workspace:*", "bullmq": "^5.13.0", "ioredis": "^5.4.1", "archiver": "^7.0.1", "node-ssh": "^13.2.0", "execa": "^9.4.0", "pino": "^9.4.0" },
+  "devDependencies": { "tsx": "^4.19.0", "vitest": "^2.1.0", "@types/node": "^20.16.0", "@types/archiver": "^6.0.2" } }
